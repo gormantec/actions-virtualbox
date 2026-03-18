@@ -1,0 +1,31 @@
+name: "VirtualBox Reboot Guest"
+description: "Reboot guest to trigger bootstrap service."
+
+inputs:
+  base_vm_user:
+    description: "Existing guest user for guestcontrol auth."
+    required: true
+  base_vm_host_password:
+    description: "Password for base guest user."
+    required: true
+  vm_name:
+    description: "Target VM name."
+    required: false
+    default: "openclaw-vm"
+  vboxmanage_path:
+    description: "Path to VBoxManage.exe."
+    required: false
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Reboot guest"
+      shell: "powershell"
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Reboot-GuestToRunBootstrap.ps1'
+        & $scriptPath `
+          -VmName '${{ inputs.vm_name }}' `
+          -BaseVmUser '${{ inputs.base_vm_user }}' `
+          -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}'

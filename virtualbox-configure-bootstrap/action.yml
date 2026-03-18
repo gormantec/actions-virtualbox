@@ -1,0 +1,59 @@
+name: "VirtualBox Configure Bootstrap"
+description: "Upload and configure guest bootstrap files."
+
+inputs:
+  base_vm_user:
+    description: "Existing guest user for guestcontrol auth."
+    required: true
+  vm_user:
+    description: "OpenClaw user to write into env."
+    required: true
+  config_repo:
+    description: "Repo containing install assets."
+    required: true
+  config_ref:
+    description: "Git ref for install assets."
+    required: true
+  base_vm_host_password:
+    description: "Password for base guest user."
+    required: true
+  openclaw_install_env_b64:
+    description: "Base64 encoded env file."
+    required: true
+  github_token:
+    description: "GitHub token for API download."
+    required: true
+  github_copilot_token:
+    description: "GitHub token for API download."
+    required: true
+  cloudflare_tunnel_token:
+    description: "cloudflare tunnel token for web access."
+    required: true
+  vm_name:
+    description: "Target VM name."
+    required: false
+    default: "openclaw-vm"
+  vboxmanage_path:
+    description: "Path to VBoxManage.exe."
+    required: false
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Configure bootstrap"
+      shell: "powershell"
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Configure-Bootstrap.ps1'
+        & $scriptPath `
+          -VmName '${{ inputs.vm_name }}' `
+          -BaseVmUser '${{ inputs.base_vm_user }}' `
+          -OpenClawUser '${{ inputs.vm_user }}' `
+          -ConfigRepo '${{ inputs.config_repo }}' `
+          -ConfigRef '${{ inputs.config_ref }}' `
+          -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
+          -OpenClawInstallEnvB64 '${{ inputs.openclaw_install_env_b64 }}' `
+          -GitHubToken '${{ inputs.github_token }}' `
+          -GitHubCopilotToken '${{ inputs.github_copilot_token }}' `
+          -CloudflareTunnelToken '${{ inputs.cloudflare_tunnel_token }}' `
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}'

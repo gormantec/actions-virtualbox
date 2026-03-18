@@ -1,0 +1,60 @@
+name: VirtualBox Clone VM
+description: Clone and configure the target VM.
+
+inputs:
+  base_vm_name:
+    description: Name of the base VM.
+    required: true
+  base_snapshot_name:
+    description: Snapshot name to clone from (empty to clone current state).
+    required: false
+    default: ""
+  vm_memory_mb:
+    description: VM memory in MB.
+    required: true
+  vm_cpus:
+    description: Number of VM CPUs.
+    required: true
+  vm_bridge_adapter:
+    description: Optional host bridge adapter.
+    required: false
+    default: ""
+  vm_mac_address:
+    description: Optional fixed NIC1 MAC address.
+    required: false
+    default: ""
+  delete_existing_vm:
+    description: Delete existing VM first.
+    required: true
+  vm_name:
+    description: Target VM name.
+    required: false
+    default: openclaw-vm
+  vboxmanage_path:
+    description: Path to VBoxManage.exe.
+    required: false
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+
+runs:
+  using: composite
+  steps:
+    - name: Clone VM
+      shell: powershell
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Clone-VmFromBase.ps1'
+        $resolvedVmMacAddress = '${{ inputs.vm_mac_address }}'
+        if ([string]::IsNullOrWhiteSpace($resolvedVmMacAddress) -and -not [string]::IsNullOrWhiteSpace($env:VM_MAC_ADDRESS)) {
+          $resolvedVmMacAddress = $env:VM_MAC_ADDRESS
+          Write-Host 'Using VM_MAC_ADDRESS environment fallback for vm_mac_address.'
+        }
+
+        & $scriptPath `
+          -VmName '${{ inputs.vm_name }}' `
+          -BaseVmName '${{ inputs.base_vm_name }}' `
+          -BaseSnapshotName '${{ inputs.base_snapshot_name }}' `
+          -VmMemoryMb '${{ inputs.vm_memory_mb }}' `
+          -VmCpus '${{ inputs.vm_cpus }}' `
+          -VmBridgeAdapter '${{ inputs.vm_bridge_adapter }}' `
+          -VmMacAddress "$resolvedVmMacAddress" `
+          -DeleteExistingVm '${{ inputs.delete_existing_vm }}' `
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
