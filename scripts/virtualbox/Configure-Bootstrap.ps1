@@ -11,6 +11,7 @@ param(
   [string]$BootstrapInstallEnvB64,
   [string]$GitHubToken,
   [string]$GitHubCopilotToken,
+  [string]$GeminiToken,
   [string]$CloudflareTunnelToken,
   [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
 )
@@ -112,6 +113,7 @@ Write-Host 'Wrote env file from BOOTSTRAP_INSTALL_ENV_B64'
 # Append the Token on a new line (Fix: use $GitHubToken and add \n)
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_TOKEN=%s' '$GitHubToken' >> /root/bootstrap-install.env"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_COPILOT_TOKEN=%s' '$GitHubCopilotToken' >> /root/bootstrap-install.env"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGEMINI_TOKEN=%s' '$GeminiToken' >> /root/bootstrap-install.env"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nCLOUDFLARE_TUNNEL_TOKEN=%s' '$CloudflareTunnelToken' >> /root/bootstrap-install.env"
 Write-Host 'Appended to env file'
 
