@@ -87,13 +87,21 @@ $installScriptFileName = Split-Path -Path $installScriptPathNormalized -Leaf
 if ([string]::IsNullOrWhiteSpace($installScriptFileName)) {
   throw "install_script_path '$InstallScriptPath' does not contain a valid file name."
 }
+
+$installScriptPathEncoded = (($installScriptPathNormalized -split '/') | ForEach-Object { [uri]::EscapeDataString($_) }) -join '/'
+$bootstrapHelperPathEncoded = 'scripts/linux/install_bootstrap_service.sh'
+$configRefEncoded = [uri]::EscapeDataString($ConfigRef)
+$bootstrapRefEncoded = [uri]::EscapeDataString($BootstrapRef)
+
 $installScriptGuestPath = "/root/$installScriptFileName"
-$installScriptUrl = "$repoApi/$installScriptPathNormalized?ref=$ConfigRef"
+$installScriptUrl = '{0}/{1}?ref={2}' -f $repoApi, $installScriptPathEncoded, $configRefEncoded
 $bootstrapScriptGuestPath = '/root/install_bootstrap_service.sh'
-$bootstrapScriptUrl = "$bootstrapRepoApi/scripts/linux/install_bootstrap_service.sh?ref=$BootstrapRef"
+$bootstrapScriptUrl = '{0}/{1}?ref={2}' -f $bootstrapRepoApi, $bootstrapHelperPathEncoded, $bootstrapRefEncoded
 
 Write-Host "Resolved install script: $ConfigRepo/$installScriptPathNormalized@$ConfigRef"
 Write-Host "Resolved bootstrap helper script: $BootstrapRepo/scripts/linux/install_bootstrap_service.sh@$BootstrapRef"
+Write-Host "Install script URL: $installScriptUrl"
+Write-Host "Bootstrap helper URL: $bootstrapScriptUrl"
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command 'set -euo pipefail; mkdir -p /var/log; touch /var/log/unattended-postinstall.log; chmod 644 /var/log/unattended-postinstall.log'
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$installScriptUrl' -o $installScriptGuestPath"
