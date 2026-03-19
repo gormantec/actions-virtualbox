@@ -220,6 +220,121 @@ Example:
 		base_vm_host_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
 ```
 
+## Generic VBoxManage command actions
+
+In addition to workflow-focused actions above, this repository now includes one generic action per top-level `VBoxManage` command. Each action accepts:
+
+- `arguments` (optional): Newline-separated arguments passed to the command.
+- `vboxmanage_path` (optional): Path to `VBoxManage.exe`.
+
+Example (`showvminfo` variants grouped into one action):
+
+```yaml
+- name: Show VM info (machine-readable)
+	uses: gormantec/actions-virtualbox/virtualbox-showvminfo@v1
+	with:
+		arguments: |
+			my-vm
+			--machinereadable
+
+- name: Show VM log index 0
+	uses: gormantec/actions-virtualbox/virtualbox-showvminfo@v1
+	with:
+		arguments: |
+			my-vm
+			--log=0
+```
+
+Basic examples:
+
+```yaml
+- name: List all VMs
+	uses: gormantec/actions-virtualbox/virtualbox-list@v1
+	with:
+		arguments: |
+			vms
+
+- name: Start VM headless
+	uses: gormantec/actions-virtualbox/virtualbox-startvm@v1
+	with:
+		arguments: |
+			my-vm
+			--type=headless
+
+- name: Graceful shutdown via ACPI
+	uses: gormantec/actions-virtualbox/virtualbox-controlvm@v1
+	with:
+		arguments: |
+			my-vm
+			acpipowerbutton
+
+- name: Run command in guest
+	uses: gormantec/actions-virtualbox/virtualbox-guestcontrol@v1
+	with:
+		arguments: |
+			my-vm
+			run
+			--username=vmhost
+			--password=${{ secrets.BASE_VM_HOST_PASSWORD }}
+			--exe=/bin/echo
+			--
+			hello-from-guest
+```
+
+Available generic command actions:
+
+- `gormantec/actions-virtualbox/virtualbox-list@v1`
+- `gormantec/actions-virtualbox/virtualbox-showvminfo@v1`
+- `gormantec/actions-virtualbox/virtualbox-registervm@v1`
+- `gormantec/actions-virtualbox/virtualbox-unregistervm@v1`
+- `gormantec/actions-virtualbox/virtualbox-createvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-modifyvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-snapshot@v1`
+- `gormantec/actions-virtualbox/virtualbox-clonevm@v1`
+- `gormantec/actions-virtualbox/virtualbox-movevm@v1`
+- `gormantec/actions-virtualbox/virtualbox-encryptvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-startvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-controlvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-import@v1`
+- `gormantec/actions-virtualbox/virtualbox-export@v1`
+- `gormantec/actions-virtualbox/virtualbox-mediumio@v1`
+- `gormantec/actions-virtualbox/virtualbox-sharedfolder@v1`
+- `gormantec/actions-virtualbox/virtualbox-dhcpserver@v1`
+- `gormantec/actions-virtualbox/virtualbox-debugvm@v1`
+- `gormantec/actions-virtualbox/virtualbox-extpack@v1`
+- `gormantec/actions-virtualbox/virtualbox-unattended@v1`
+- `gormantec/actions-virtualbox/virtualbox-cloud@v1`
+- `gormantec/actions-virtualbox/virtualbox-cloudprofile@v1`
+- `gormantec/actions-virtualbox/virtualbox-signova@v1`
+- `gormantec/actions-virtualbox/virtualbox-modifynvram@v1`
+- `gormantec/actions-virtualbox/virtualbox-hostonlynet@v1`
+- `gormantec/actions-virtualbox/virtualbox-updatecheck@v1`
+- `gormantec/actions-virtualbox/virtualbox-discardstate@v1`
+- `gormantec/actions-virtualbox/virtualbox-adoptstate@v1`
+- `gormantec/actions-virtualbox/virtualbox-closemedium@v1`
+- `gormantec/actions-virtualbox/virtualbox-storageattach@v1`
+- `gormantec/actions-virtualbox/virtualbox-storagectl@v1`
+- `gormantec/actions-virtualbox/virtualbox-bandwidthctl@v1`
+- `gormantec/actions-virtualbox/virtualbox-showmediuminfo@v1`
+- `gormantec/actions-virtualbox/virtualbox-createmedium@v1`
+- `gormantec/actions-virtualbox/virtualbox-modifymedium@v1`
+- `gormantec/actions-virtualbox/virtualbox-clonemedium@v1`
+- `gormantec/actions-virtualbox/virtualbox-mediumproperty@v1`
+- `gormantec/actions-virtualbox/virtualbox-encryptmedium@v1`
+- `gormantec/actions-virtualbox/virtualbox-checkmediumpwd@v1`
+- `gormantec/actions-virtualbox/virtualbox-convertfromraw@v1`
+- `gormantec/actions-virtualbox/virtualbox-setextradata@v1`
+- `gormantec/actions-virtualbox/virtualbox-getextradata@v1`
+- `gormantec/actions-virtualbox/virtualbox-setproperty@v1`
+- `gormantec/actions-virtualbox/virtualbox-usbfilter@v1`
+- `gormantec/actions-virtualbox/virtualbox-guestproperty@v1`
+- `gormantec/actions-virtualbox/virtualbox-guestcontrol@v1`
+- `gormantec/actions-virtualbox/virtualbox-metrics@v1`
+- `gormantec/actions-virtualbox/virtualbox-natnetwork@v1`
+- `gormantec/actions-virtualbox/virtualbox-hostonlyif@v1`
+- `gormantec/actions-virtualbox/virtualbox-usbdevsource@v1`
+- `gormantec/actions-virtualbox/virtualbox-objtracker@v1`
+
 ## Requirements
 
 - Self-hosted Windows runner with VirtualBox installed.

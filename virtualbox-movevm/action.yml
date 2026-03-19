@@ -1,0 +1,21 @@
+name: "VirtualBox movevm"
+description: "Run VBoxManage movevm with custom arguments."
+
+inputs:
+  arguments:
+    description: "Newline-separated arguments passed to 'VBoxManage movevm'."
+    required: false
+    default: ""
+  vboxmanage_path:
+    description: "Path to VBoxManage.exe."
+    required: false
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Run VBoxManage movevm"
+      shell: "powershell"
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Run-VBoxManage.ps1'
+        & $scriptPath -Subcommand 'movevm' -Arguments '${{ inputs.arguments }}' -VBoxManagePath '${{ inputs.vboxmanage_path }}'

@@ -32,17 +32,32 @@ if ([string]::IsNullOrWhiteSpace($ConfigRepo) -or $ConfigRepo -notmatch '^[^/]+/
 if ([string]::IsNullOrWhiteSpace($ConfigRef)) {
   throw 'config_ref cannot be empty.'
 }
+$bootstrapRepoSource = 'input'
 if ([string]::IsNullOrWhiteSpace($BootstrapRepo)) {
   $BootstrapRepo = $env:GITHUB_ACTION_REPOSITORY
+  $bootstrapRepoSource = 'env:GITHUB_ACTION_REPOSITORY'
 }
-if ([string]::IsNullOrWhiteSpace($BootstrapRepo) -or $BootstrapRepo -notmatch '^[^/]+/[^/]+$') {
-  throw "bootstrap_repo must be in owner/repo format. Provide bootstrap_repo input or set GITHUB_ACTION_REPOSITORY (current: '$BootstrapRepo')."
+if ([string]::IsNullOrWhiteSpace($BootstrapRepo)) {
+  $BootstrapRepo = 'gormantec/actions-virtualbox'
+  $bootstrapRepoSource = 'hardcoded fallback'
 }
+if ($BootstrapRepo -eq 'gormantec/actions-vitualbox') {
+  Write-Warning "Detected typo in bootstrap_repo '$BootstrapRepo'. Using 'gormantec/actions-virtualbox' instead."
+  $BootstrapRepo = 'gormantec/actions-virtualbox'
+  $bootstrapRepoSource = 'hardcoded fallback (typo corrected)'
+}
+if ($BootstrapRepo -notmatch '^[^/]+/[^/]+$') {
+  throw "bootstrap_repo must be in owner/repo format. Resolved value '$BootstrapRepo' from $bootstrapRepoSource is invalid."
+}
+
+$bootstrapRefSource = 'input'
 if ([string]::IsNullOrWhiteSpace($BootstrapRef)) {
   $BootstrapRef = $env:GITHUB_ACTION_REF
+  $bootstrapRefSource = 'env:GITHUB_ACTION_REF'
 }
 if ([string]::IsNullOrWhiteSpace($BootstrapRef)) {
   $BootstrapRef = 'main'
+  $bootstrapRefSource = 'hardcoded fallback'
 }
 if ([string]::IsNullOrWhiteSpace($InstallScriptPath)) {
   throw 'install_script_path cannot be empty.'
@@ -52,7 +67,7 @@ if ([string]::IsNullOrWhiteSpace($BootstrapInstallEnvB64)) {
 }
 
 Write-Host "Using config repository: $ConfigRepo"
-Write-Host "Using bootstrap helper repository: $BootstrapRepo@$BootstrapRef"
+Write-Host "Using bootstrap helper repository: $BootstrapRepo@$BootstrapRef (repo source: $bootstrapRepoSource, ref source: $bootstrapRefSource)"
 
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
