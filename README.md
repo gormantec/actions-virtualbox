@@ -1,5 +1,8 @@
 # actions-virtualbox
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[NOTICE](NOTICE)
+
 Reusable GitHub Actions for managing VirtualBox VMs on self-hosted Windows runners.
 
 ## Usage
