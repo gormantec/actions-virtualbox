@@ -13,7 +13,7 @@ if ([string]::IsNullOrWhiteSpace($BaseVmHostPassword)) {
 
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
-$probeCommand = 'test -f /var/log/unattended-postinstall.log || test -f /var/log/bootstrap.log'
+$probeCommand = 'test -f /var/log/unattended-postinstall.log || test -f /var/log/bootstrap-install.log'
 $maxAttempts = 30
 $sleepSeconds = 10
 $logsReady = $false
@@ -54,9 +54,9 @@ $followSleepSeconds = 20
 $allDoneSeen = $false
 
 for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
-  Write-Host "Following /var/log/bootstrap.log (attempt $attempt/$followAttempts)..."
+  Write-Host "Following /var/log/bootstrap-install.log (attempt $attempt/$followAttempts)..."
 
-  $countCommand = 'if [ -f /var/log/bootstrap.log ]; then wc -l < /var/log/bootstrap.log; else echo 0; fi'
+  $countCommand = 'if [ -f /var/log/bootstrap-install.log ]; then wc -l < /var/log/bootstrap-install.log; else echo 0; fi'
   $previousEap = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
   $lineCountRaw = ''
@@ -75,7 +75,7 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
     if ($lineCountMatch.Success) {
       $lineCount = [int]$lineCountMatch.Groups[1].Value
       if ($lineCount -ge $lastLine) {
-        $chunkCommand = "sed -n '$lastLine,${lineCount}p' /var/log/bootstrap.log"
+        $chunkCommand = "sed -n '$lastLine,${lineCount}p' /var/log/bootstrap-install.log"
         $previousEap = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'
         try {
@@ -90,7 +90,7 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
     }
   }
 
-  $doneCommand = "if [ -f /var/log/bootstrap.log ] && grep -q 'All Done' /var/log/bootstrap.log; then echo done; fi"
+  $doneCommand = "if [ -f /var/log/bootstrap-install.log ] && grep -q 'All Done' /var/log/bootstrap-install.log; then echo done; fi"
   $previousEap = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
   $doneRaw = ''
@@ -105,7 +105,7 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
   }
 
   if ($doneExit -eq 0 -and $doneRaw -match 'done') {
-    Write-Host "Detected completion marker 'All Done' in /var/log/bootstrap.log."
+    Write-Host "Detected completion marker 'All Done' in /var/log/bootstrap-install.log."
     $allDoneSeen = $true
     break
   }
@@ -144,7 +144,7 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
 }
 
 if (-not $allDoneSeen) {
-  throw "Timed out waiting for 'All Done' in /var/log/bootstrap.log."
+  throw "Timed out waiting for 'All Done' in /var/log/bootstrap-install.log."
 }
 
 $finalDump = "echo '=== /var/log/unattended-postinstall.log ==='; if [ -f /var/log/unattended-postinstall.log ]; then tail -n 200 /var/log/unattended-postinstall.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-setup.log ==='; if [ -f /var/log/vboxadd-setup.log ]; then tail -n 120 /var/log/vboxadd-setup.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-install.log ==='; if [ -f /var/log/vboxadd-install.log ]; then tail -n 120 /var/log/vboxadd-install.log; else echo 'missing'; fi"
