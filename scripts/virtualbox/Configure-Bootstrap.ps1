@@ -76,12 +76,24 @@ Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseV
 $repoApi = "https://api.github.com/repos/$ConfigRepo/contents"
 $bootstrapRepoApi = "https://api.github.com/repos/$BootstrapRepo/contents"
 $curlAuth = "-u 'x-access-token:$GitHubToken' -H 'Accept: application/vnd.github.raw'"
-$installScriptPathNormalized = $InstallScriptPath.Trim('/')
+$installScriptPathNormalized = ($InstallScriptPath -replace '\\', '/').Trim().Trim('/')
+if ([string]::IsNullOrWhiteSpace($installScriptPathNormalized)) {
+  throw "install_script_path resolved to empty after normalization (raw value: '$InstallScriptPath')."
+}
+if ($installScriptPathNormalized.Contains('?')) {
+  throw "install_script_path must not include query parameters. Provide only a file path inside config_repo (received: '$InstallScriptPath')."
+}
 $installScriptFileName = Split-Path -Path $installScriptPathNormalized -Leaf
+if ([string]::IsNullOrWhiteSpace($installScriptFileName)) {
+  throw "install_script_path '$InstallScriptPath' does not contain a valid file name."
+}
 $installScriptGuestPath = "/root/$installScriptFileName"
 $installScriptUrl = "$repoApi/$installScriptPathNormalized?ref=$ConfigRef"
 $bootstrapScriptGuestPath = '/root/install_bootstrap_service.sh'
 $bootstrapScriptUrl = "$bootstrapRepoApi/scripts/linux/install_bootstrap_service.sh?ref=$BootstrapRef"
+
+Write-Host "Resolved install script: $ConfigRepo/$installScriptPathNormalized@$ConfigRef"
+Write-Host "Resolved bootstrap helper script: $BootstrapRepo/scripts/linux/install_bootstrap_service.sh@$BootstrapRef"
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command 'set -euo pipefail; mkdir -p /var/log; touch /var/log/unattended-postinstall.log; chmod 644 /var/log/unattended-postinstall.log'
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$installScriptUrl' -o $installScriptGuestPath"
