@@ -127,7 +127,7 @@ uses: gormantec/actions-virtualbox/virtualbox-configure-bootstrap@v1
 Mandatory inputs:
 
 - `base_vm_user`: Existing guest user used with `guestcontrol`.
-- `vm_user`: OpenClaw user used in generated env/config.
+- `vm_user`: New user used in generated env/config.
 - `config_repo`: Repository containing install assets.
 - `config_ref`: Git ref to fetch from `config_repo`.
 - `base_vm_host_password`: Password for `base_vm_user`.
@@ -138,7 +138,7 @@ Mandatory inputs:
 
 Optional inputs:
 
-- `install_script_path` (default: `install_openclaw_private.sh`): Path to the install script inside `config_repo`.
+- `install_script_path` (default: `bootstrap_install.sh`): Path to the install script inside `config_repo`.
 - `vm_name` (default: `new-vm`): Target VM name.
 - `vboxmanage_path` (default: `C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe`): Path to `VBoxManage.exe`.
 
@@ -149,15 +149,15 @@ Example:
 	uses: gormantec/actions-virtualbox/virtualbox-configure-bootstrap@v1
 	with:
 		base_vm_user: admin
-		vm_user: openclaw
-		config_repo: my-org/openclaw-install
+		vm_user: newuser
+		config_repo: my-org/bootstrap-install
 		config_ref: main
 		base_vm_host_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
 		bootstrap_install_env_b64: ${{ secrets.BOOTSTRAP_INSTALL_ENV_B64 }}
 		github_token: ${{ secrets.GITHUB_TOKEN }}
 		github_copilot_token: ${{ secrets.GITHUB_COPILOT_TOKEN }}
 		cloudflare_tunnel_token: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
-		install_script_path: install_openclaw_private.sh
+		install_script_path: bootstrap_install.sh
 ```
 
 ### `virtualbox-reboot-guest`

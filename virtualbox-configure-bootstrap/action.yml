@@ -17,7 +17,7 @@ inputs:
   install_script_path:
     description: "Path in config_repo for the install script."
     required: false
-    default: "install.sh"
+    default: "bootstrap_install.sh"
   base_vm_host_password:
     description: "Password for base guest user."
     required: true
@@ -28,7 +28,7 @@ inputs:
     description: "GitHub token for API download."
     required: true
   github_copilot_token:
-    description: "GitHub token for API download."
+    description: "GitHub Copilot token for API download."
     required: true
   cloudflare_tunnel_token:
     description: "cloudflare tunnel token for web access."
