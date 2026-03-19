@@ -17,7 +17,7 @@ inputs:
   install_script_path:
     description: "Path in config_repo for the install script."
     required: false
-    default: "install_openclaw_private.sh"
+    default: "install.sh"
   base_vm_host_password:
     description: "Password for base guest user."
     required: true
