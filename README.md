@@ -347,3 +347,8 @@ Available generic command actions:
 - Most actions expose optional inputs with defaults so consumers only pass what they need.
 - Shared PowerShell scripts live in `scripts/virtualbox` and are invoked relative to each action path.
 - The guest bootstrap service helper lives in `scripts/linux/install_bootstrap_service.sh` and is fetched by `virtualbox-configure-bootstrap` from this repository.
+
+## License
+
+- This repository is licensed under the MIT License. See `LICENSE`.
+- Third-party dependency and trademark notice for VirtualBox usage is documented in `NOTICE`.

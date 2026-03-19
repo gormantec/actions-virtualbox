@@ -1,0 +1,9 @@
+Third-party dependency notice
+
+This repository provides GitHub Actions and helper scripts that invoke Oracle VirtualBox via VBoxManage on user-provided/self-hosted runners.
+
+Oracle VirtualBox binaries, Guest Additions, and Extension Packs are not distributed in this repository.
+Users are responsible for obtaining and using VirtualBox in compliance with applicable Oracle/VirtualBox licenses and terms.
+
+Oracle and VirtualBox are trademarks of Oracle and/or its affiliates.
+No affiliation with or endorsement by Oracle is implied.
