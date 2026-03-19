@@ -110,6 +110,24 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
     break
   }
 
+  $configValidationErrorCommand = "if [ -f /var/log/bootstrap-install.log ] && grep -q 'Error: Config validation failed' /var/log/bootstrap-install.log; then echo config-validation-failed; fi"
+  $previousEap = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  $configValidationErrorRaw = ''
+  $configValidationErrorExit = 1
+  try {
+    $configValidationErrorRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $configValidationErrorCommand 2>$null | Out-String)
+    $configValidationErrorExit = $LASTEXITCODE
+  } catch {
+    $configValidationErrorExit = 1
+  } finally {
+    $ErrorActionPreference = $previousEap
+  }
+
+  if ($configValidationErrorExit -eq 0 -and $configValidationErrorRaw -match 'config-validation-failed') {
+    throw "Detected 'Error: Config validation failed' in /var/log/bootstrap-install.log."
+  }
+
   $failedCommand = 'if systemctl is-failed --quiet bootstrap.service; then echo failed; fi'
   $previousEap = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
