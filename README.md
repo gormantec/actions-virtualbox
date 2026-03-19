@@ -131,13 +131,14 @@ Mandatory inputs:
 - `config_repo`: Repository containing install assets.
 - `config_ref`: Git ref to fetch from `config_repo`.
 - `base_vm_host_password`: Password for `base_vm_user`.
-- `openclaw_install_env_b64`: Base64-encoded env file payload.
+- `bootstrap_install_env_b64`: Base64-encoded env file payload.
 - `github_token`: GitHub token for API-based downloads.
 - `github_copilot_token`: GitHub Copilot token for bootstrap.
 - `cloudflare_tunnel_token`: Cloudflare tunnel token for web access.
 
 Optional inputs:
 
+- `install_script_path` (default: `install_openclaw_private.sh`): Path to the install script inside `config_repo`.
 - `vm_name` (default: `new-vm`): Target VM name.
 - `vboxmanage_path` (default: `C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe`): Path to `VBoxManage.exe`.
 
@@ -152,10 +153,11 @@ Example:
 		config_repo: my-org/openclaw-install
 		config_ref: main
 		base_vm_host_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
-		openclaw_install_env_b64: ${{ secrets.OPENCLAW_INSTALL_ENV_B64 }}
+		bootstrap_install_env_b64: ${{ secrets.BOOTSTRAP_INSTALL_ENV_B64 }}
 		github_token: ${{ secrets.GITHUB_TOKEN }}
 		github_copilot_token: ${{ secrets.GITHUB_COPILOT_TOKEN }}
 		cloudflare_tunnel_token: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
+		install_script_path: install_openclaw_private.sh
 ```
 
 ### `virtualbox-reboot-guest`

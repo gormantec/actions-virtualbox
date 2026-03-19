@@ -13,7 +13,7 @@ if ([string]::IsNullOrWhiteSpace($BaseVmHostPassword)) {
 
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
-Write-Host 'Rebooting guest to trigger openclaw-bootstrap.service...'
+Write-Host 'Rebooting guest to trigger bootstrap.service...'
 # VBoxManage can emit VERR_NOT_FOUND when reboot kills the guestcontrol session.
 # Treat that specific condition as expected, but fail on real reboot errors.
 $previousEap = $ErrorActionPreference
