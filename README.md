@@ -80,22 +80,22 @@ Example:
 		vm_name: new-vm
 ```
 
-### `virtualbox-ensure-openclaw-user`
+### `virtualbox-ensure-new-user`
 
-Ensures the OpenClaw user exists inside the guest and applies related user/hostname configuration.
+Ensures a target user exists inside the guest and applies related user/hostname configuration.
 
 Action:
 
 ```yaml
-uses: gormantec/actions-virtualbox/virtualbox-ensure-openclaw-user@v1
+uses: gormantec/actions-virtualbox/virtualbox-ensure-new-user@v1
 ```
 
 Mandatory inputs:
 
 - `base_vm_user`: Existing guest user used with `guestcontrol`.
-- `vm_user`: OpenClaw user to create/configure.
+- `vm_user`: User to create/configure.
 - `base_vm_host_password`: Password for `base_vm_user`.
-- `openclaw_vm_password`: Password to set for `vm_user`.
+- `new_user_password`: Password to set for `vm_user`.
 
 Optional inputs:
 
@@ -105,13 +105,13 @@ Optional inputs:
 Example:
 
 ```yaml
-- name: Ensure OpenClaw guest user
-	uses: gormantec/actions-virtualbox/virtualbox-ensure-openclaw-user@v1
+- name: Ensure guest user
+	uses: gormantec/actions-virtualbox/virtualbox-ensure-new-user@v1
 	with:
 		base_vm_user: admin
-		vm_user: openclaw
+		vm_user: appuser
 		base_vm_host_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
-		openclaw_vm_password: ${{ secrets.OPENCLAW_VM_PASSWORD }}
+		new_user_password: ${{ secrets.NEW_USER_PASSWORD }}
 ```
 
 ### `virtualbox-configure-bootstrap`
