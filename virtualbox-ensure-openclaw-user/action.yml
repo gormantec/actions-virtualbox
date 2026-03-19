@@ -1,18 +1,18 @@
-name: VirtualBox Ensure OpenClaw User
-description: Ensure OpenClaw user and hostname config inside guest.
+name: VirtualBox Ensure New User
+description: Ensure new user and hostname config inside guest.
 
 inputs:
   base_vm_user:
     description: Existing guest user for guestcontrol auth.
     required: true
   vm_user:
-    description: OpenClaw user to create/configure.
+    description: New user to create/configure.
     required: true
   base_vm_host_password:
     description: Password for base guest user.
     required: true
-  openclaw_vm_password:
-    description: Password to assign to OpenClaw user.
+  new_user_password:
+    description: Password to assign to the new user.
     required: true
   vm_name:
     description: Target VM name.
@@ -29,11 +29,11 @@ runs:
     - name: Ensure user
       shell: powershell
       run: |
-        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Ensure-OpenClawUser.ps1'
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Ensure-NewUser.ps1'
         & $scriptPath `
           -VmName '${{ inputs.vm_name }}' `
           -BaseVmUser '${{ inputs.base_vm_user }}' `
-          -OpenClawUser '${{ inputs.vm_user }}' `
+          -NewUser '${{ inputs.vm_user }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
-          -OpenClawVmPassword '${{ inputs.openclaw_vm_password }}' `
+          -NewUserPassword '${{ inputs.new_user_password }}' `
           -VBoxManagePath '${{ inputs.vboxmanage_path }}'
