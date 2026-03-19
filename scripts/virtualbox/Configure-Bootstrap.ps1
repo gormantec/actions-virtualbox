@@ -1,11 +1,11 @@
 param(
   [string]$VmName = 'new-vm',
   [string]$BaseVmUser = 'vmhost',
-  [string]$OpenClawUser = 'openclaw',
+  [string]$VmUser = 'vmuser',
   [string]$ConfigRepo = '',
   [string]$ConfigRef = 'main',
   [string]$BaseVmHostPassword,
-  [string]$OpenClawInstallEnvB64,
+  [string]$BootstrapInstallEnvB64,
   [string]$GitHubToken,
   [string]$GitHubCopilotToken,
   [string]$CloudflareTunnelToken,
@@ -29,8 +29,8 @@ if ([string]::IsNullOrWhiteSpace($ConfigRepo) -or $ConfigRepo -notmatch '^[^/]+/
 if ([string]::IsNullOrWhiteSpace($ConfigRef)) {
   throw 'config_ref cannot be empty.'
 }
-if ([string]::IsNullOrWhiteSpace($OpenClawInstallEnvB64)) {
-  throw 'Missing required secret OPENCLAW_INSTALL_ENV_B64 for guest bootstrap.'
+if ([string]::IsNullOrWhiteSpace($BootstrapInstallEnvB64)) {
+  throw 'Missing required secret BOOTSTRAP_INSTALL_ENV_B64 for guest bootstrap.'
 }
 
 Write-Host "Using config repository: $ConfigRepo"
@@ -48,13 +48,14 @@ Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmU
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$installScriptUrl' -o /root/install_openclaw_private.sh"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$bootstrapScriptUrl' -o /root/install_bootstrap_on_vm.sh"
 
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '%s' '$OpenClawInstallEnvB64' | base64 -d > /root/openclaw-install.env"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '%s' '$BootstrapInstallEnvB64' | base64 -d > /root/openclaw-install.env"
 Write-Host 'Wrote env file from OPENCLAW_INSTALL_ENV_B64'
 # Append the Token on a new line (Fix: use $GitHubToken and add \n)
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_TOKEN=%s' '$GitHubCopilotToken' >> /root/openclaw-install.env"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_TOKEN=%s' '$GitHubToken' >> /root/openclaw-install.env"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_COPILOT_TOKEN=%s' '$GitHubCopilotToken' >> /root/openclaw-install.env"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nCLOUDFLARE_TUNNEL_TOKEN=%s' '$CloudflareTunnelToken' >> /root/openclaw-install.env"
 Write-Host 'Appended to env file'
 
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/openclaw-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$OpenClawUser/' /root/openclaw-install.env; else printf '\nTARGET_USER=$OpenClawUser\n' >> /root/openclaw-install.env; fi"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/openclaw-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/openclaw-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/openclaw-install.env; fi"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command 'set -euo pipefail; chmod +x /root/install_openclaw_private.sh /root/install_bootstrap_on_vm.sh'
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command 'set -euo pipefail; bash /root/install_bootstrap_on_vm.sh --script /root/install_openclaw_private.sh --env /root/openclaw-install.env'

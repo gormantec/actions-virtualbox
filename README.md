@@ -45,9 +45,9 @@ Example:
 - name: Clone VM
 	uses: gormantec/actions-virtualbox/virtualbox-clone-vm@v1
 	with:
-		base_vm_name: openclaw-base
-		vm_memory_mb: "8192"
-		vm_cpus: "4"
+		base_vm_name: base-vm
+		vm_memory_mb: "4096"
+		vm_cpus: "2"
 		delete_existing_vm: "true"
 		base_snapshot_name: clean
 ```
