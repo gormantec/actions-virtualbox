@@ -49,7 +49,7 @@ if (-not $logsReady) {
 }
 
 $lastLine = 1
-$followAttempts = 200
+$followAttempts = 100
 $followSleepSeconds = 20
 $allDoneSeen = $false
 
