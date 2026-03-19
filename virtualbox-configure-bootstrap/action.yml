@@ -55,6 +55,8 @@ runs:
           -VmUser '${{ inputs.vm_user }}' `
           -ConfigRepo '${{ inputs.config_repo }}' `
           -ConfigRef '${{ inputs.config_ref }}' `
+          -BootstrapRepo '${{ github.action_repository }}' `
+          -BootstrapRef '${{ github.action_ref }}' `
           -InstallScriptPath '${{ inputs.install_script_path }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
           -BootstrapInstallEnvB64 '${{ inputs.bootstrap_install_env_b64 }}' `
