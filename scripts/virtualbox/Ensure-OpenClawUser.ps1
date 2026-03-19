@@ -1,5 +1,5 @@
 param(
-  [string]$VmName = 'openclaw-vm',
+  [string]$VmName = 'new-vm',
   [string]$BaseVmUser = 'vmhost',
   [string]$OpenClawUser = 'openclaw',
   [string]$BaseVmHostPassword,
@@ -35,7 +35,17 @@ if ($LASTEXITCODE -ne 0) {
   throw "Failed to create/configure user '$OpenClawUser' on guest (exit code $LASTEXITCODE)."
 }
 
-$targetHostname = 'openclaw-vm'
+$targetHostname = $VmName.ToLowerInvariant() -replace '[^a-z0-9-]', '-'
+$targetHostname = $targetHostname.Trim('-')
+if ([string]::IsNullOrWhiteSpace($targetHostname)) {
+  throw "vm_name '$VmName' cannot be converted to a valid guest hostname. Use letters, numbers, or hyphens."
+}
+if ($targetHostname.Length -gt 63) {
+  $targetHostname = $targetHostname.Substring(0, 63).Trim('-')
+}
+if ([string]::IsNullOrWhiteSpace($targetHostname)) {
+  throw "vm_name '$VmName' produced an empty hostname after normalization."
+}
 $targetDomain = 'local'
 $targetFqdn = "$targetHostname.$targetDomain"
 $setHostnameParts = @(

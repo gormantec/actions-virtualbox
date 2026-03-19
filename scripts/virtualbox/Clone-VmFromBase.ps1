@@ -1,5 +1,5 @@
 param(
-  [string]$VmName = 'openclaw-vm',
+  [string]$VmName = 'new-vm',
   [string]$BaseVmName = 'ubuntu-24-04',
   [string]$BaseSnapshotName = 'clean-base-ubuntu',
   [string]$VmMemoryMb = '4096',

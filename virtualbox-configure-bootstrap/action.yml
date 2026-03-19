@@ -31,8 +31,8 @@ inputs:
     required: true
   vm_name:
     description: "Target VM name."
-    required: false
-    default: "openclaw-vm"
+    required: true
+    default: "new-vm"
   vboxmanage_path:
     description: "Path to VBoxManage.exe."
     required: false

@@ -1,5 +1,5 @@
 param(
-  [string]$VmName = 'openclaw-vm',
+  [string]$VmName = 'new-vm',
   [string]$BaseVmUser = 'vmhost',
   [string]$OpenClawUser = 'openclaw',
   [string]$ConfigRepo = '',

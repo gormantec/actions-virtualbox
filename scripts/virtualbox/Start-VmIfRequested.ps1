@@ -1,5 +1,5 @@
 param(
-  [string]$VmName = 'openclaw-vm',
+  [string]$VmName = 'new-vm',
   [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
 )
 
