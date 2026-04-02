@@ -2,7 +2,11 @@ param(
   [string]$VmName = 'new-vm',
   [string]$BaseVmUser = 'vmhost',
   [string]$BaseVmHostPassword,
-  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
+  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe',
+  [int]$OfflineAttempts = 6,
+  [int]$OfflineSleepSeconds = 5,
+  [int]$OnlineAttempts = 24,
+  [int]$OnlineSleepSeconds = 5
 )
 
 . "$PSScriptRoot/Common.ps1"
@@ -45,32 +49,34 @@ if ($expectedGuestSessionClose) {
 
 Write-Host 'Reboot command issued. Waiting for VM to go offline...'
 
+
 $wentOffline = $false
-for ($attempt = 1; $attempt -le 6; $attempt++) {
+for ($attempt = 1; $attempt -le $OfflineAttempts; $attempt++) {
   $stateLine = & $vboxManage showvminfo $VmName --machinereadable | Select-String '^VMState='
   if (-not $stateLine -or -not $stateLine.ToString().Contains('running')) {
     Write-Host 'VM has gone offline.'
     $wentOffline = $true
     break
   }
-  Write-Host "Waiting for VM to go offline (attempt $attempt/6)..."
-  Start-Sleep -Seconds 5
+  Write-Host "Waiting for VM to go offline (attempt $attempt/$OfflineAttempts)..."
+  Start-Sleep -Seconds $OfflineSleepSeconds
 }
 
 if (-not $wentOffline) {
   Write-Warning "VM '$VmName' did not appear to go offline; continuing anyway."
 }
 
+
 $running = $false
-for ($attempt = 1; $attempt -le 24; $attempt++) {
+for ($attempt = 1; $attempt -le $OnlineAttempts; $attempt++) {
   $stateLine = & $vboxManage showvminfo $VmName --machinereadable | Select-String '^VMState='
   if ($stateLine -and $stateLine.ToString().Contains('running')) {
     Write-Host 'VM is running again.'
     $running = $true
     break
   }
-  Write-Host "Waiting for VM to return to running state (attempt $attempt/24)..."
-  Start-Sleep -Seconds 5
+  Write-Host "Waiting for VM to return to running state (attempt $attempt/$OnlineAttempts)..."
+  Start-Sleep -Seconds $OnlineSleepSeconds
 }
 
 if (-not $running) {

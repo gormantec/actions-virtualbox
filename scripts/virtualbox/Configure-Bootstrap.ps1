@@ -14,7 +14,9 @@ param(
   [string]$GitHubBridgeToken,
   [string]$GeminiToken,
   [string]$CloudflareTunnelToken,
-  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
+  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe',
+  [int]$GuestControlAttempts = 36,
+  [int]$GuestControlSleepSeconds = 20
 )
 
 . "$PSScriptRoot/Common.ps1"
@@ -73,7 +75,7 @@ Write-Host "Using bootstrap helper repository: $BootstrapRepo@$BootstrapRef (rep
 
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
-Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts 36 -SleepSeconds 20 -AttemptLabel 'Waiting for guestcontrol' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready after reset. Check VBox logs and guest boot logs.' -ResetOnFailure -LogGuestAdditions
+Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready after reset. Check VBox logs and guest boot logs.' -ResetOnFailure -LogGuestAdditions
 
 $repoApi = "https://api.github.com/repos/$ConfigRepo/contents"
 $bootstrapRepoApi = "https://api.github.com/repos/$BootstrapRepo/contents"

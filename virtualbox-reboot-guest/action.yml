@@ -16,6 +16,22 @@ inputs:
     description: "Path to VBoxManage.exe."
     required: false
     default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+  offline_attempts:
+    description: "Attempts to wait for VM to go offline."
+    required: false
+    default: 6
+  offline_sleep_seconds:
+    description: "Seconds to sleep between offline checks."
+    required: false
+    default: 5
+  online_attempts:
+    description: "Attempts to wait for VM to return online."
+    required: false
+    default: 24
+  online_sleep_seconds:
+    description: "Seconds to sleep between online checks."
+    required: false
+    default: 5
 
 runs:
   using: "composite"
@@ -28,4 +44,8 @@ runs:
           -VmName '${{ inputs.vm_name }}' `
           -BaseVmUser '${{ inputs.base_vm_user }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
-          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}' `
+          -OfflineAttempts ${{ inputs.offline_attempts }} `
+          -OfflineSleepSeconds ${{ inputs.offline_sleep_seconds }} `
+          -OnlineAttempts ${{ inputs.online_attempts }} `
+          -OnlineSleepSeconds ${{ inputs.online_sleep_seconds }}'

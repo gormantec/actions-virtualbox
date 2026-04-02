@@ -4,7 +4,9 @@ param(
   [string]$NewUser = 'newuser',
   [string]$BaseVmHostPassword,
   [string]$NewUserPassword,
-  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
+  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe',
+  [int]$GuestControlAttempts = 18,
+  [int]$GuestControlSleepSeconds = 20
 )
 
 . "$PSScriptRoot/Common.ps1"
@@ -19,7 +21,7 @@ if ([string]::IsNullOrWhiteSpace($NewUserPassword)) {
 
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
-Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts 18 -SleepSeconds 20 -AttemptLabel 'Waiting for guestcontrol before user setup' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready before new user setup. Check VBox logs and guest boot logs.' -ResetOnFailure
+Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol before user setup' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready before new user setup. Check VBox logs and guest boot logs.' -ResetOnFailure
 
 $createUserParts = @(
   "id -u $NewUser >/dev/null 2>&1 || useradd -m -s /bin/bash $NewUser",

@@ -39,6 +39,14 @@ inputs:
   cloudflare_tunnel_token:
     description: "cloudflare tunnel token for web access."
     required: true
+  guestcontrol_attempts:
+    description: "Attempts for guestcontrol ready."
+    required: false
+    default: 36
+  guestcontrol_sleep_seconds:
+    description: "Seconds to sleep between guestcontrol ready checks."
+    required: false
+    default: 20
   vm_name:
     description: "Target VM name."
     required: true
@@ -71,4 +79,6 @@ runs:
           -GitHubBridgeToken '${{ inputs.github_bridge_token }}' `
           -GeminiToken '${{ inputs.gemini_token }}' `
           -CloudflareTunnelToken '${{ inputs.cloudflare_tunnel_token }}' `
-          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}' `
+          -GuestControlAttempts ${{ inputs.guestcontrol_attempts }} `
+          -GuestControlSleepSeconds ${{ inputs.guestcontrol_sleep_seconds }}

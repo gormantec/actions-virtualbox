@@ -22,6 +22,14 @@ inputs:
     description: Path to VBoxManage.exe.
     required: false
     default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+  guestcontrol_attempts:
+    description: Attempts for guestcontrol ready.
+    required: false
+    default: 18
+  guestcontrol_sleep_seconds:
+    description: Seconds to sleep between guestcontrol ready checks.
+    required: false
+    default: 20
 
 runs:
   using: composite
@@ -36,4 +44,6 @@ runs:
           -NewUser '${{ inputs.vm_user }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
           -NewUserPassword '${{ inputs.new_user_password }}' `
-          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}' `
+          -GuestControlAttempts ${{ inputs.guestcontrol_attempts }} `
+          -GuestControlSleepSeconds ${{ inputs.guestcontrol_sleep_seconds }}
