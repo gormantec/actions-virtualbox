@@ -117,7 +117,13 @@ try {
 if ($null -eq $envObj) {
   throw "bootstrap_env_json did not produce a valid object."
 }
-$envContent = ($envObj.PSObject.Properties | ForEach-Object { "{0}={1}" -f $_.Name, $_.Value }) -join "`n"
+# Always wrap values in double quotes and escape embedded quotes and backslashes
+$envContent = ($envObj.PSObject.Properties | ForEach-Object {
+  $key = $_.Name
+  $val = [string]$_.Value
+  $escaped = $val -replace '\\', '\\\\' -replace '"', '\\"'
+  "{0}=""{1}""" -f $key, $escaped
+}) -join "`n"
 # Escape for single-quoted bash heredoc
 $heredoc = @(
   "cat <<'EOF' > /root/bootstrap-install.env",
@@ -129,4 +135,8 @@ Write-Host 'Wrote env file from bootstrap_env_json (in-memory, not written to ho
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/bootstrap-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/bootstrap-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/bootstrap-install.env; fi"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; chmod +x $installScriptGuestPath $bootstrapScriptGuestPath"
+
+# Run the bootstrap helper script
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; bash $bootstrapScriptGuestPath --script $installScriptGuestPath --env /root/bootstrap-install.env"
+# Delete the install script from /root after bootstrap is configured
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; rm -f $installScriptGuestPath"
