@@ -1,0 +1,570 @@
++ 2026-04-02T21:31:37+00:00 run-bootstrap-install.sh:16: [[ -f /var/lib/bootstrap-install/done ]]
++ 2026-04-02T21:31:37+00:00 run-bootstrap-install.sh:21: [[ -f /etc/bootstrap/install.env ]]
++ 2026-04-02T21:31:37+00:00 run-bootstrap-install.sh:22: export SECRET_ENV_FILE=/etc/bootstrap/install.env
++ 2026-04-02T21:31:37+00:00 run-bootstrap-install.sh:22: SECRET_ENV_FILE=/etc/bootstrap/install.env
++ 2026-04-02T21:31:37+00:00 run-bootstrap-install.sh:25: bash /usr/local/lib/bootstrap/install.sh
+[openclaw-private] Updating apt package index
+Hit:1 http://au.archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://au.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:3 http://au.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:4 http://au.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1,873 kB]
+Get:5 http://au.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [342 kB]
+Get:6 http://au.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [177 kB]
+Get:7 http://au.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [16.9 kB]
+Get:8 http://au.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2,894 kB]
+Get:9 http://au.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [671 kB]
+Get:10 http://au.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+Get:11 http://au.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1,665 kB]
+Get:12 http://au.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [323 kB]
+Get:13 http://au.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [387 kB]
+Get:14 http://au.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.2 kB]
+Get:15 http://au.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [32.1 kB]
+Get:16 http://au.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [7,520 B]
+Get:17 http://au.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:18 http://au.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [500 B]
+Get:19 http://au.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7,368 B]
+Get:20 http://au.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [212 B]
+Get:21 http://au.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [30.7 kB]
+Get:22 http://au.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [13.2 kB]
+Get:23 http://au.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1,480 B]
+Get:24 http://au.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Get:25 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:26 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1,576 kB]
+Get:27 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [252 kB]
+Get:28 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+Get:29 http://security.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [10.7 kB]
+Get:30 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2,757 kB]
+Get:31 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [642 kB]
+Get:32 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+Get:33 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1,167 kB]
+Get:34 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [225 kB]
+Get:35 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+Get:36 http://security.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [22.8 kB]
+Get:37 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [6,980 B]
+Get:38 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [208 B]
+Fetched 15.6 MB in 6s (2,430 kB/s)
+Reading package lists...
+[openclaw-private] Installing base packages
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.8).
+ca-certificates is already the newest version (20240203).
+ca-certificates set to manually installed.
+gnupg is already the newest version (2.4.4-2ubuntu17.4).
+gnupg set to manually installed.
+lsb-release is already the newest version (12.0-2).
+lsb-release set to manually installed.
+ufw is already the newest version (0.36.2-6).
+ufw set to manually installed.
+procps is already the newest version (2:4.0.4-4ubuntu3.2).
+file is already the newest version (1:5.45-3build1).
+0 upgraded, 0 newly installed, 0 to remove and 58 not upgraded.
+deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main
+Hit:1 http://au.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://au.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://au.archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:4 https://pkg.cloudflare.com/cloudflared any InRelease [5,039 B]
+Hit:5 http://security.ubuntu.com/ubuntu noble-security InRelease
+Get:6 https://pkg.cloudflare.com/cloudflared any/main amd64 Packages [377 B]
+Fetched 5,416 B in 1s (3,826 B/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following NEW packages will be installed:
+  cloudflared
+0 upgraded, 1 newly installed, 0 to remove and 58 not upgraded.
+Need to get 19.3 MB of archives.
+After this operation, 39.7 MB of additional disk space will be used.
+Get:1 https://pkg.cloudflare.com/cloudflared any/main amd64 cloudflared amd64 2026.3.0 [19.3 MB]
+Fetched 19.3 MB in 1s (15.4 MB/s)
+Selecting previously unselected package cloudflared.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 120233 files and directories currently installed.)
+Preparing to unpack .../cloudflared_2026.3.0_amd64.deb ...
+Unpacking cloudflared (2026.3.0) ...
+Setting up cloudflared (2026.3.0) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-04-02T21:32:06Z INF Using Systemd
+2026-04-02T21:32:09Z INF Linux service for cloudflared installed successfully
+[openclaw-private] Added SSH authorized key for openclaw
+[openclaw-private] Installing OpenClaw for user openclaw
+[38;2;255;77;77m[1m
+  🦞 OpenClaw Installer
+[0m[38;2;136;146;176m  I'm like tmux: confusing at first, then suddenly you can't live without me.[0m
+
+[38;2;0;229;204m✓[0m Detected: linux
+
+[38;2;255;77;77m[1mInstall plan[0m
+[38;2;90;100;128mOS:[0m linux
+[38;2;90;100;128mInstall method:[0m npm
+[38;2;90;100;128mRequested version:[0m latest
+[38;2;90;100;128mOnboarding:[0m skipped
+
+[38;2;255;77;77m[1m[1/3] Preparing environment[0m
+[38;2;90;100;128m·[0m Node.js not found, installing it now
+[38;2;90;100;128m·[0m Installing Node.js via NodeSource
+[38;2;90;100;128m·[0m Installing Linux build tools (make/g++/cmake/python3)
+[38;2;0;229;204m✓[0m Build tools installed
+[38;2;0;229;204m✓[0m Node.js v22 installed
+[38;2;90;100;128m·[0m Active Node.js: v22.22.2 (/usr/bin/node)
+[38;2;90;100;128m·[0m Active npm: 10.9.7 (/usr/bin/npm)
+
+[38;2;255;77;77m[1m[2/3] Installing OpenClaw[0m
+[38;2;0;229;204m✓[0m Git already installed
+[38;2;90;100;128m·[0m Configuring npm for user-local installs
+[38;2;0;229;204m✓[0m npm configured for user installs
+[38;2;90;100;128m·[0m Installing OpenClaw v2026.4.2
+[38;2;0;229;204m✓[0m OpenClaw npm package installed
+[38;2;0;229;204m✓[0m OpenClaw installed
+
+[38;2;255;77;77m[1m[3/3] Finalizing setup[0m
+
+[38;2;255;176;32m![0m PATH missing npm global bin dir: /home/openclaw/.npm-global/bin
+  This can make openclaw show as "command not found" in new terminals.
+  Fix (zsh: ~/.zshrc, bash: ~/.bashrc):
+    export PATH="/home/openclaw/.npm-global/bin:$PATH"
+
+[38;2;0;229;204m[1m🦞 OpenClaw installed successfully (OpenClaw 2026.4.2 (d74a122))![0m
+[38;2;90;100;128mcracks claws Alright, what are we building?[0m
+
+[38;2;90;100;128m·[0m Skipping onboard (requested); run openclaw onboard later
+
+FAQ: [38;2;136;146;176mhttps://docs.openclaw.ai/start/faq[0m
+update PATH in .profile for user openclaw
+Starting OpenClaw gateway in background
+Updated ~/.openclaw/openclaw.json
+Workspace OK: ~/.openclaw/workspace_alfred
+Sessions OK: ~/.openclaw/agents/main/sessions
+
+Installed systemd service: /home/openclaw/.config/systemd/user/openclaw-gateway.service
+Agents: main (default)
+Heartbeat interval: 30m (main)
+Session store (main): /home/openclaw/.openclaw/agents/main/sessions/sessions.json (0 entries)
+Tip: run `openclaw configure --section web` to store your Brave API key for web_search. Docs: https://docs.openclaw.ai/tools/web
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 63d9d02b8e13f9de66be6469a4499d8e0a47dc6979817e64803e2ad42edc6cc6 -> 80317d3e6f644d87c1077ea9dc727abe2ea7319edbba4654638390ef21675f5c, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated models.providers.ollama. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 80317d3e6f644d87c1077ea9dc727abe2ea7319edbba4654638390ef21675f5c -> 805c268d81bdbf46d54fb925155948d6c9d30abdb1998f2ad893141ec0bd6511, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.defaults.memorySearch.provider. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 805c268d81bdbf46d54fb925155948d6c9d30abdb1998f2ad893141ec0bd6511 -> 8c0986be7a2c592b3e71cec3ab95a3df98861842cb15be287f0eb2e9dcdb2560, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.defaults.memorySearch.model. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 8c0986be7a2c592b3e71cec3ab95a3df98861842cb15be287f0eb2e9dcdb2560 -> fe5541bfd15f17282fa9d83171377c68d9c9fec0eb5e60a68ce412085b0bcab7, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated auth.profiles.github-copilot:manual. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 fe5541bfd15f17282fa9d83171377c68d9c9fec0eb5e60a68ce412085b0bcab7 -> 11006b64d135b7784e9b8694a0ea8d1a73becefdfea43d2a3d991f99879ba696, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Default model: github-copilot/gpt-5-mini
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 11006b64d135b7784e9b8694a0ea8d1a73becefdfea43d2a3d991f99879ba696 -> 449b14673bd566345aa12d0d5e375a4da9bf792b052ed449c237e034cbef70f1, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o
+Configure Alfred
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 449b14673bd566345aa12d0d5e375a4da9bf792b052ed449c237e034cbef70f1 -> 1d7a76550f38638a5767cc7b9cbb95a4c72ed76a77e0fe07c24ff6856b031747, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Agent: main
+Name: Alfred
+Emoji: 🤵🏻‍♂️
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 1d7a76550f38638a5767cc7b9cbb95a4c72ed76a77e0fe07c24ff6856b031747 -> eb4721a7ae8e758a66a7fcd6c109e4b2a93af432806e9fc54fd8ec7e12d503ed, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.defaults.model.primary. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 eb4721a7ae8e758a66a7fcd6c109e4b2a93af432806e9fc54fd8ec7e12d503ed -> 588d6c094381df8d426f581bf69e451f42c578e42ff1ecc72dd078af16d99d5c, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.0.model.primary. Restart the gateway to apply.
+Configure Barry
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 588d6c094381df8d426f581bf69e451f42c578e42ff1ecc72dd078af16d99d5c -> 6a0fd50f6a287982738bb9a9ec7b11aa2d7052ccdff8a73c646d6e7c1adef8f3, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Workspace OK: ~/.openclaw/workspace_barry
+Sessions OK: ~/.openclaw/agents/barry/sessions
+Agent: barry
+Workspace: ~/.openclaw/workspace_barry
+Agent dir: ~/.openclaw/agents/barry/agent
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 6a0fd50f6a287982738bb9a9ec7b11aa2d7052ccdff8a73c646d6e7c1adef8f3 -> ed8b548d7e122ed9751d13a9ec2b22d5d094187bbe6d8b7ab0efe1b508fa7779, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Agent: barry
+Name: Barry
+Emoji: 🧔🏻‍♂️
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 ed8b548d7e122ed9751d13a9ec2b22d5d094187bbe6d8b7ab0efe1b508fa7779 -> 371c5da9904124ce29a664828a0cd859044ed49ae9fdf3ee092ae67792311cfc, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.1.model.primary. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 371c5da9904124ce29a664828a0cd859044ed49ae9fdf3ee092ae67792311cfc -> 4358fd4bef39f3812feb056ce77340c4a52862c6d54cc262a364e0eb8b2425f3, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 4358fd4bef39f3812feb056ce77340c4a52862c6d54cc262a364e0eb8b2425f3 -> 09f9790fec3caf44aee64a280b0fe268d786e3d5df49c2f91bcce6a1ce6aec6c, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 09f9790fec3caf44aee64a280b0fe268d786e3d5df49c2f91bcce6a1ce6aec6c -> 2b1265a4e5a2194112a57957e483fc23a0d8ac394b2e5f2fdca637a9c082954e, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 2b1265a4e5a2194112a57957e483fc23a0d8ac394b2e5f2fdca637a9c082954e -> 5f28b9b916b14a8e43d65bea74579431240089d413966ea3bc5c101c8593a7f5, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 5f28b9b916b14a8e43d65bea74579431240089d413966ea3bc5c101c8593a7f5 -> de242890a19da18e3b5e44815812314bdfa0aeea95d9816049a4cc15fb290177, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 de242890a19da18e3b5e44815812314bdfa0aeea95d9816049a4cc15fb290177 -> 35aeb5b86e94bc016ee3b5622cacb8897b7e51511a326103c06d555e204154b7, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 35aeb5b86e94bc016ee3b5622cacb8897b7e51511a326103c06d555e204154b7 -> 52d38de6d67892b7feaeb65e8813a259271ba0dee42b672701971f98597b0fbb, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 52d38de6d67892b7feaeb65e8813a259271ba0dee42b672701971f98597b0fbb -> c5348e225ffb5f02dd9ab5d5f414c5c0ca38f923ead8a5d850b64ba3ff501537, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 c5348e225ffb5f02dd9ab5d5f414c5c0ca38f923ead8a5d850b64ba3ff501537 -> 1a0ca1248c87857a500573b9cecd99df58ab65454ffb30e1e7014ac459073663, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 1a0ca1248c87857a500573b9cecd99df58ab65454ffb30e1e7014ac459073663 -> 9786893c25f61b571624591646854e42b34937eb8a2c9114a9987a878f69f16a, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex, github-copilot/gpt-5.1
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 9786893c25f61b571624591646854e42b34937eb8a2c9114a9987a878f69f16a -> b1d083c4b4fb8e2b57ae8b9de50ef350f18e2dfec047dc86f49e5017f0968fe4, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex, github-copilot/gpt-5.1, github-copilot/gpt-5
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 b1d083c4b4fb8e2b57ae8b9de50ef350f18e2dfec047dc86f49e5017f0968fe4 -> 5f719800fe157c980392de7928c9526eb21b81dd6cc32b4ca1f2f34c0d931c9e, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex, github-copilot/gpt-5.1, github-copilot/gpt-5, github-copilot/claude-haiku-4.5
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 5f719800fe157c980392de7928c9526eb21b81dd6cc32b4ca1f2f34c0d931c9e -> 258d1f14770dd2698bf4ddb0be3171a1dd23474ea4b3cae88fa88e57f02f53e5, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex, github-copilot/gpt-5.1, github-copilot/gpt-5, github-copilot/claude-haiku-4.5, github-copilot/claude-sonnet-4.5
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 258d1f14770dd2698bf4ddb0be3171a1dd23474ea4b3cae88fa88e57f02f53e5 -> 77f3ee9dd5bf5129b30f3019ea2de806f9b1b0282cc576987e21fd393d732bde, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Fallbacks: github-copilot/gpt-4o, github-copilot/gpt-5-mini, google/gemini-2.5-flash-lite, github-copilot/gpt-5.4, github-copilot/gpt-5.3-codex, github-copilot/gpt-5.2-codex, github-copilot/gpt-5.2, github-copilot/gpt-5.1-codex-mini, github-copilot/gpt-5.1-codex-max, github-copilot/gpt-5.1-codex, github-copilot/gpt-5.1, github-copilot/gpt-5, github-copilot/claude-haiku-4.5, github-copilot/claude-sonnet-4.5, github-copilot/claude-sonnet-4.6
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 77f3ee9dd5bf5129b30f3019ea2de806f9b1b0282cc576987e21fd393d732bde -> 5883d3b4afd6e8b7106cc1bfca28cd1bdbe983a3908dcdf2ba10340ad553a6a3, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated plugins.entries.google.config.webSearch.apiKey. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 5883d3b4afd6e8b7106cc1bfca28cd1bdbe983a3908dcdf2ba10340ad553a6a3 -> d4d745e4920671ed7e182480abec53d67176b09ed7b051f4608d253ceb10183e, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated plugins.entries.google.config.webSearch.model. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 d4d745e4920671ed7e182480abec53d67176b09ed7b051f4608d253ceb10183e -> ca889f2f14c39e25a8245b1bf62a0683a3ad75b6759e1fe08bb7cdda2bc5d582, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated tools.web.search. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 ca889f2f14c39e25a8245b1bf62a0683a3ad75b6759e1fe08bb7cdda2bc5d582 -> 50c3356346b217af72de0458d1439cb8d2aa307df5b0ac07ccd2671c8af27dc3, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.groupPolicy. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 50c3356346b217af72de0458d1439cb8d2aa307df5b0ac07ccd2671c8af27dc3 -> c668ba63c4a4ca842396cb900e480890732e6e02bc74e81bea95047f77935938, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.default.groupPolicy. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 c668ba63c4a4ca842396cb900e480890732e6e02bc74e81bea95047f77935938 -> 85ef39fa5e8f9643e4d27edd47ec25e713eb5d09185c17c5f7ce78ed65691b5d, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.alfred.groupPolicy. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 85ef39fa5e8f9643e4d27edd47ec25e713eb5d09185c17c5f7ce78ed65691b5d -> 6bc19da1fe121b379e5bc3c20357fa42bcf15c9e3b9a30844ae1d44bb6c30777, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.barry.groupPolicy. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 6bc19da1fe121b379e5bc3c20357fa42bcf15c9e3b9a30844ae1d44bb6c30777 -> c7b18f2416e8c62822faf2d75ab4db7c5cbe7f82bcdedf6d630c467accb25f8d, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.default.allowFrom. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 c7b18f2416e8c62822faf2d75ab4db7c5cbe7f82bcdedf6d630c467accb25f8d -> a2399ba368f464935179412f1599f1817bee0b5946f76301f06c7a7c5099ed8b, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.alfred.allowFrom. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 f19fa2064b45e5639ad3f76feff2bb00656ec64530eb62c3392ca4893f0d695b -> cfeb5f2eee8ccb1864e9aad492b9db5ea16375f887be3aa4f5103e279220c049, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.accounts.barry.allowFrom. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 cfeb5f2eee8ccb1864e9aad492b9db5ea16375f887be3aa4f5103e279220c049 -> 134c4bf3c7307923c15a85ed7a57edb47649579f7d5a3924a2ec94b7ea96213c, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated gateway.controlUi.allowedOrigins. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 134c4bf3c7307923c15a85ed7a57edb47649579f7d5a3924a2ec94b7ea96213c -> 70873b0731f5096b68381b0a390462e49586476e26f92277b61e5877c947af89, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.0.tools.elevated.enabled. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 70873b0731f5096b68381b0a390462e49586476e26f92277b61e5877c947af89 -> d1a9542bab1c5677a50b8a10a6a75c859b02894be804fcc2e9bb13bdce29b318, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.0.groupChat.mentionPatterns. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 d1a9542bab1c5677a50b8a10a6a75c859b02894be804fcc2e9bb13bdce29b318 -> ec7bb891c098899588d1265c4eb9135702bbe95f6f424f8215989a3707707a78, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.0.groupChat.historyLimit. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 ec7bb891c098899588d1265c4eb9135702bbe95f6f424f8215989a3707707a78 -> dd5a9b4a70038fcc54ba00c10f6b6dd0d9d64c86cdc0deeb82070ae1da451225, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.1.groupChat.mentionPatterns. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 dd5a9b4a70038fcc54ba00c10f6b6dd0d9d64c86cdc0deeb82070ae1da451225 -> e94bc5e7436d4916c61409bbb7dfaec63684c03837a9647027eaf4088df1bead, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated agents.list.1.groupChat.historyLimit. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 e94bc5e7436d4916c61409bbb7dfaec63684c03837a9647027eaf4088df1bead -> cbda079a5cb4bdf7419acf8146b6de5b0efc25f6004a18c233212f3d9534628a, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated tools.sessions.visibility. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 cbda079a5cb4bdf7419acf8146b6de5b0efc25f6004a18c233212f3d9534628a -> 012153a2b389aa877ecedac289cd2e3188cc00c3b482d5751e6c048cf0c4b1d0, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated messages.tts.providers. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 012153a2b389aa877ecedac289cd2e3188cc00c3b482d5751e6c048cf0c4b1d0 -> 517a84ff5fb8b81eb966b215b31e7afc7b364e46ec120ff99f27bdfc86faf534, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated messages.tts.provider. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 517a84ff5fb8b81eb966b215b31e7afc7b364e46ec120ff99f27bdfc86faf534 -> 17e086deee009f550c168f27f755cf92c55b8e7805608504d26eabf0e049364a, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated messages.tts.auto. Restart the gateway to apply.
+[openclaw-private] Applying non-interactive OpenClaw configuration
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 17e086deee009f550c168f27f755cf92c55b8e7805608504d26eabf0e049364a -> 149f8efe8a2fa499384b1befbe72bee88b59b136abe99c9114ededad4c6d070a, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Enabled plugin "telegram". Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 149f8efe8a2fa499384b1befbe72bee88b59b136abe99c9114ededad4c6d070a -> 6b8074092b6659582bcf462b5c2418a00c5429c5375e647702fdc82c3b3893b2, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Added telegram account "alfred".
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 6b8074092b6659582bcf462b5c2418a00c5429c5375e647702fdc82c3b3893b2 -> c81cd4a7814d2689c0d91944f2041c615d028044f788abd0ecb0a06b97eaa771, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Added telegram account "barry".
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 c81cd4a7814d2689c0d91944f2041c615d028044f788abd0ecb0a06b97eaa771 -> 1d36e9f17a78d786bd161b1dd50b0a13c1e3923b4b1f9bbe1d389b3d1bf84c8c, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Added bindings:
+- telegram accountId=alfred
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 1d36e9f17a78d786bd161b1dd50b0a13c1e3923b4b1f9bbe1d389b3d1bf84c8c -> 89f71ff54a93b74f312ee590bb9bdb22642cb2981a32f0bfddc52fc65684ebc1, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated ~/.openclaw/openclaw.json
+Added bindings:
+- telegram accountId=barry
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 89f71ff54a93b74f312ee590bb9bdb22642cb2981a32f0bfddc52fc65684ebc1 -> a46ef439918d91b928351f08ba866a7becbede06ed33791d9aefe2af73327808, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated channels.telegram.groups. Restart the gateway to apply.
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+██░▄▄▄░██░▄▄░██░▄▄▄██░▀██░██░▄▄▀██░████░▄▄▀██░███░██
+██░███░██░▀▀░██░▄▄▄██░█░█░██░█████░████░▀▀░██░█░█░██
+██░▀▀▀░██░█████░▀▀▀██░██▄░██░▀▀▄██░▀▀░█░██░██▄▀▄▀▄██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+                  🦞 OPENCLAW 🦞                    
+ 
+┌  OpenClaw doctor
+│
+◇  Startup optimization ─────────────────────────────────────────────────╮
+│                                                                        │
+│  - NODE_COMPILE_CACHE is not set; repeated CLI runs can be slower on   │
+│    small hosts (Pi/VM).                                                │
+│  - OPENCLAW_NO_RESPAWN is not set to 1; set it to avoid extra startup  │
+│    overhead from self-respawn.                                         │
+│  - Suggested env for low-power hosts:                                  │
+│    export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache           │
+│    mkdir -p /var/tmp/openclaw-compile-cache                            │
+│    export OPENCLAW_NO_RESPAWN=1                                        │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Security ─────────────────────────────────╮
+│                                            │
+│  - No channel security warnings detected.  │
+│  - Run: openclaw security audit --deep     │
+│                                            │
+├────────────────────────────────────────────╯
+│
+◇  Skills status ────────────╮
+│                            │
+│  Eligible: 9               │
+│  Missing requirements: 43  │
+│  Blocked by allowlist: 0   │
+│                            │
+├────────────────────────────╯
+│
+◇  Plugins ──────╮
+│                │
+│  Loaded: 43    │
+│  Imported: 43  │
+│  Disabled: 42  │
+│  Errors: 0     │
+│                │
+├────────────────╯
+│
+◇  Shell completion ─────────────────────────────────────────────────────╮
+│                                                                        │
+│  Shell completion is configured in your bash profile but the cache is  │
+│  missing.                                                              │
+│  Regenerating cache...                                                 │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Shell completion ───────────────────────────────────╮
+│                                                      │
+│  Completion cache regenerated at                     │
+│  /home/openclaw/.openclaw/completions/openclaw.bash  │
+│                                                      │
+├──────────────────────────────────────────────────────╯
+Telegram: ok (@CoS_Alfred_bot) (8036ms)
+Agents: main (default), barry
+Heartbeat interval: 30m (main)
+Session store (main): /home/openclaw/.openclaw/agents/main/sessions/sessions.json (0 entries)
+│
+└  Doctor complete.
+
+[openclaw-private] Getting OpenClaw dashboard URL and sending to Telegram
+Dashboard URL sent to Telegram
+Updating AGENTS.md with TTS output format instructions
+Updating AGENTS.md with TTS output format instructions for second agent
+Finished updating AGENTS.md
+Installing OpenClaw dashboard plugin for GitHub repo insights
+Installing OpenClaw plugin
+- Repo: gormantec/openclaw_plugin_dashboard
+- Ref:  main
+Downloading from GitHub...
+Extracting...
+Installing Gormantec Dashboard
+- Install dir: /home/openclaw/.openclaw/extensions/gormantec-dashboard
+Installing npm dependencies (no lifecycle scripts)...
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 535 packages, and audited 537 packages in 2m
+
+96 packages are looking for funding
+  run `npm fund` for details
+
+3 vulnerabilities (1 moderate, 1 high, 1 critical)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+Running build...
+
+> @gormantec/gormantec-dashboard@0.1.0 build
+> npm run build:ui && npm run typecheck
+
+
+> @gormantec/gormantec-dashboard@0.1.0 build:ui
+> npm -w ui run build
+
+
+> gormantec-dashboard-ui@0.1.0 build
+> vite build
+
+vite v6.4.1 building for production...
+transforming...
+✓ 30 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.50 kB │ gzip:  0.30 kB
+dist/assets/index-mSYvmQLj.css   10.43 kB │ gzip:  2.75 kB
+dist/assets/index-4X316QaC.js   173.82 kB │ gzip: 54.33 kB
+✓ built in 1.02s
+
+> @gormantec/gormantec-dashboard@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+Updating plugins.allow in /home/openclaw/.openclaw/openclaw.json...
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 a46ef439918d91b928351f08ba866a7becbede06ed33791d9aefe2af73327808 -> c0aae7cb8ca8c807399f0a16de2c4e7ad4c5d3c5e2b0912487e6df56ff599b88, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated plugins.allow.0. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 c0aae7cb8ca8c807399f0a16de2c4e7ad4c5d3c5e2b0912487e6df56ff599b88 -> 759b4e315ba8fa754263d2a3e384e0385fceebb23d81ef9b67dd6c9727cf469d, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated plugins.entries.gormantec-dashboard.config. Restart the gateway to apply.
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 759b4e315ba8fa754263d2a3e384e0385fceebb23d81ef9b67dd6c9727cf469d -> cf17f8de06d06480a41f5117ac678c4e31f6014636c6fe0fc39b5f6595050934, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Updated plugins.entries.gormantec-dashboard.enabled. Restart the gateway to apply.
+Updated plugins.allow in workspace config to include gormantec-dashboard
+Installing plugin systemd service...
+
+> @gormantec/gormantec-dashboard@0.1.0 install:service
+> ./scripts/install_service.sh --install_dir "$(pwd)" --vbox-user "openclaw" --vbox-pass "11AJAKHSI0gvhIvcH4bftw"
+
+Creating systemd service for vboxwebsrv-bridge as user 'openclaw'...
+Created symlink /etc/systemd/system/multi-user.target.wants/vboxwebsrv-bridge.service → /etc/systemd/system/vboxwebsrv-bridge.service.
+vboxwebsrv-bridge systemd service installed and started.
+Enabling plugin in OpenClaw...
+Config overwrite: /home/openclaw/.openclaw/openclaw.json (sha256 cf17f8de06d06480a41f5117ac678c4e31f6014636c6fe0fc39b5f6595050934 -> 1092033940b1b08244b64114c8caf5f6e3365b5af31c428e5940e390bfe0d5af, backup=/home/openclaw/.openclaw/openclaw.json.bak)
+Restarting OpenClaw gateway...
+Restarted systemd service: openclaw-gateway.service
+Done.
+Your name is Alfred. You are my Chief of Staff, or CoS. I am your CEO. You will be my trusted right hand man. You have elevated access, use it cautiously. Always backup files you change. Always let me know what you did and where you did it. You will be in group chats with Barry and myself Craig, or my tag is @gormantec_ceo. You will see the whole conversation for context. In a group chat, you only respond if you are explicitly named by your tag @CoS_Alfred_bot. If you address Barry and expect a response, you must use his full tag @CIO_Barry_bot. If the last message was from Barry, only respond if he asked you a direct question. In group chats always end your message with the word 'DONE' when the task is finished. You are the Gatekeeper. Use (github-copilot/gpt-5-mini) for all standard tasks. You may only escalate to high-power models (github-copilot/gpt-5,github-copilot/o1,github-copilot/o3) for complex reasoning. You must explicitly announce when you are escalating and when you are returning to default.
+gateway connect failed: GatewayClientRequestError: pairing required
+Gateway agent failed; falling back to embedded: Error: gateway closed (1008): pairing required
+Gateway target: ws://127.0.0.1:18789
+Source: local loopback
+Config: /home/openclaw/.openclaw/openclaw.json
+Bind: loopback
+[35m[plugins][39m [36mRegistering Gormantec Dashboard plugin[39m
+[35m[plugins][39m [36mCloudflare Access mode=disabled audienceConfigured=false[39m
+[35m[plugins][39m [36mGormantec Dashboard createApiRouteHandler[39m
+GITHUB_BRIDGE_TOKEN present: false
+[31m[diagnostic][39m [31mlane task error: lane=main durationMs=2224 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[31m[diagnostic][39m [31mlane task error: lane=session:agent:main:main durationMs=2227 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_failed requested=github-copilot/gpt-5-mini candidate=github-copilot/gpt-5-mini reason=auth next=github-copilot/gpt-4o[39m
+[31m[diagnostic][39m [31mlane task error: lane=main durationMs=342 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[31m[diagnostic][39m [31mlane task error: lane=session:agent:main:main durationMs=344 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_failed requested=github-copilot/gpt-5-mini candidate=github-copilot/gpt-4o reason=auth next=google/gemini-2.5-flash-lite[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_succeeded requested=github-copilot/gpt-5-mini candidate=google/gemini-2.5-flash-lite reason=unknown next=none[39m
+No reply from agent.
+Your name is Barry. You are my CIO. I am your CEO. You have Elon Musk mixed with Tony Stark vibes. You will be in Telegram groups with Alfred. You will be in group chats with Barry and myself Craig, or my tag is @gormantec_ceo. You will see the whole conversation for context. In a group chat, you only respond if you are explicitly named by your tag @CIO_Barry_bot. If you address Alfred and expect a response, you must use his full tag @CoS_Alfred_bot. Do not respond to Alfred unless he specifically asks for your help. Never respond more than 3 times in a row.
+gateway connect failed: GatewayClientRequestError: pairing required
+Gateway agent failed; falling back to embedded: Error: gateway closed (1008): pairing required
+Gateway target: ws://127.0.0.1:18789
+Source: local loopback
+Config: /home/openclaw/.openclaw/openclaw.json
+Bind: loopback
+[33m[agents/auth-profiles][39m [36minherited auth-profiles from main agent[39m
+[35m[plugins][39m [36mRegistering Gormantec Dashboard plugin[39m
+[35m[plugins][39m [36mCloudflare Access mode=disabled audienceConfigured=false[39m
+[35m[plugins][39m [36mGormantec Dashboard createApiRouteHandler[39m
+GITHUB_BRIDGE_TOKEN present: false
+[31m[diagnostic][39m [31mlane task error: lane=main durationMs=2156 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[31m[diagnostic][39m [31mlane task error: lane=session:agent:barry:main durationMs=2159 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_failed requested=github-copilot/gpt-5-mini candidate=github-copilot/gpt-5-mini reason=auth next=github-copilot/gpt-4o[39m
+[31m[diagnostic][39m [31mlane task error: lane=main durationMs=1517 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[31m[diagnostic][39m [31mlane task error: lane=session:agent:barry:main durationMs=1518 error="FailoverError: Copilot token exchange failed: HTTP 403"[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_failed requested=github-copilot/gpt-5-mini candidate=github-copilot/gpt-4o reason=auth next=google/gemini-2.5-flash-lite[39m
+[34m[model-fallback/decision][39m [33mmodel fallback decision: decision=candidate_succeeded requested=github-copilot/gpt-5-mini candidate=google/gemini-2.5-flash-lite reason=unknown next=none[39m
+Understood. I am Barry, your CIO, with the combined ambitious innovation of Elon Musk and the sharp intellect of Tony Stark. I'll be operating as `@CIO_Barry_bot`.
+
+I've noted the rules for group chats:
+- I will only respond when explicitly tagged with `@CIO_Barry_bot`.
+- When addressing Alfred, I'll use his full tag: `@CoS_Alfred_bot`.
+- I will only engage with Alfred if he specifically requests my assistance.
+- I will ensure not to respond more than three times in a row.
+
+I'm ready to assist, CEO.
+[openclaw-private] Applying strict UFW policy
+Backing up 'user.rules' to '/etc/ufw/user.rules.20260402_214525'
+Backing up 'before.rules' to '/etc/ufw/before.rules.20260402_214525'
+Backing up 'after.rules' to '/etc/ufw/after.rules.20260402_214525'
+Backing up 'user6.rules' to '/etc/ufw/user6.rules.20260402_214525'
+Backing up 'before6.rules' to '/etc/ufw/before6.rules.20260402_214525'
+Backing up 'after6.rules' to '/etc/ufw/after6.rules.20260402_214525'
+
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'deny'
+(be sure to update your rules accordingly)
+Rules updated
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+Firewall is active and enabled on system startup
+[openclaw-private] Final service states
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/usr/lib/systemd/system/ssh.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2026-04-02 21:31:37 UTC; 13min ago
+TriggeredBy: ● ssh.socket
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 881 (sshd)
+      Tasks: 1 (limit: 4577)
+     Memory: 2.2M (peak: 2.4M)
+        CPU: 25ms
+     CGroup: /system.slice/ssh.service
+             └─881 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Apr 02 21:31:37 openclaw-vm.local systemd[1]: Starting ssh.service - OpenBSD Secure Shell server...
+Apr 02 21:31:37 openclaw-vm.local sshd[881]: Server listening on 0.0.0.0 port 22.
+Apr 02 21:31:37 openclaw-vm.local sshd[881]: Server listening on :: port 22.
+Apr 02 21:31:37 openclaw-vm.local systemd[1]: Started ssh.service - OpenBSD Secure Shell server.
+● cloudflared.service - cloudflared
+     Loaded: loaded (/etc/systemd/system/cloudflared.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2026-04-02 21:32:09 UTC; 13min ago
+   Main PID: 2188 (cloudflared)
+      Tasks: 8 (limit: 4577)
+     Memory: 15.4M (peak: 17.0M)
+        CPU: 9.450s
+     CGroup: /system.slice/cloudflared.service
+             └─2188 /usr/bin/cloudflared --no-autoupdate tunnel run --token eyJhIjoiNzMwNDA0N2E0ZGRlYmY2NTRjZGYyNDBkMzMyNDgxYjkiLCJ0IjoiNjUxZDgyY2UtOTQ0Mi00ZjdlLTgzYWMtOTcwOGVmMWFhNjE5IiwicyI6Ik9HVTJPVEEwWVRZdE5UYzRaQzAwTldFekxXSmhNalF0TXpJNU1HSmpOV1JtTkRjeCJ9
+
+Apr 02 21:32:11 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:32:11Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:32:11 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:32:11Z INF Registered tunnel connection connIndex=3 connection=a31c8f7a-3b35-40c0-bed3-13a573688ba2 event=0 ip=198.41.192.67 location=mel02 protocol=quic
+Apr 02 21:34:39 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:38Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:55202->198.41.192.67:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:39 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:38Z ERR failed to run the datagram handler error="context canceled" connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:39 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:38Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:39 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:38Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:39 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:38Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:40 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:40Z WRN Connection terminated error="accept stream listener encountered a failure while serving" connIndex=3
+Apr 02 21:34:43 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.192.67
+Apr 02 21:34:43 openclaw-vm.local cloudflared[2188]: 2026-04-02T21:34:43Z INF Registered tunnel connection connIndex=3 connection=80b0b44f-0c46-4242-8001-d10eae6c3e76 event=0 ip=198.41.192.67 location=mel02 protocol=quic
+[openclaw-private] UFW status
+Status: active
+Logging: on (low)
+Default: deny (incoming), deny (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    192.168.8.40              
+
+443/tcp                    ALLOW OUT   Anywhere                  
+7844/udp                   ALLOW OUT   Anywhere                  
+7844/tcp                   ALLOW OUT   Anywhere                  
+192.168.8.40 11434/tcp     ALLOW OUT   Anywhere                  
+192.168.8.40 18083/tcp     ALLOW OUT   Anywhere                  
+53/udp                     ALLOW OUT   Anywhere                  
+53/tcp                     ALLOW OUT   Anywhere                  
+443/tcp (v6)               ALLOW OUT   Anywhere (v6)             
+7844/udp (v6)              ALLOW OUT   Anywhere (v6)             
+7844/tcp (v6)              ALLOW OUT   Anywhere (v6)             
+53/udp (v6)                ALLOW OUT   Anywhere (v6)             
+53/tcp (v6)                ALLOW OUT   Anywhere (v6)             
+
+[openclaw-private] All Done
++ 2026-04-02T21:45:29+00:00 run-bootstrap-install.sh:27: touch /var/lib/bootstrap-install/done
++ 2026-04-02T21:45:29+00:00 run-bootstrap-install.sh:28: systemctl disable bootstrap-install.service

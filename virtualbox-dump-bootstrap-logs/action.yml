@@ -16,6 +16,18 @@ inputs:
     description: Path to VBoxManage.exe.
     required: false
     default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
+  follow_attempts:
+    description: Number of log follow attempts.
+    required: false
+    default: 100
+  follow_sleep_seconds:
+    description: Seconds to sleep between log follow attempts.
+    required: false
+    default: 20
+  max_stale:
+    description: Max stale attempts before considering log complete if service is inactive.
+    required: false
+    default: 5
 
 runs:
   using: composite
@@ -28,4 +40,7 @@ runs:
           -VmName '${{ inputs.vm_name }}' `
           -BaseVmUser '${{ inputs.base_vm_user }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
-          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}' `
+          -FollowAttempts ${{ inputs.follow_attempts }} `
+          -FollowSleepSeconds ${{ inputs.follow_sleep_seconds }} `
+          -MaxStale ${{ inputs.max_stale }}

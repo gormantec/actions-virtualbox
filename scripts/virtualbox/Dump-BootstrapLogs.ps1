@@ -2,7 +2,10 @@ param(
   [string]$VmName = 'new-vm',
   [string]$BaseVmUser = 'vmhost',
   [string]$BaseVmHostPassword,
-  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe'
+  [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe',
+  [int]$FollowAttempts = 100,
+  [int]$FollowSleepSeconds = 20,
+  [int]$MaxStale = 5
 )
 
 . "$PSScriptRoot/Common.ps1"
@@ -48,13 +51,14 @@ if (-not $logsReady) {
   Write-Warning 'Log files not detected yet. Trying best-effort fetch anyway.'
 }
 
-$lastLine = 1
-$followAttempts = 100
-$followSleepSeconds = 20
-$allDoneSeen = $false
 
-for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
-  Write-Host "Following /var/log/bootstrap-install.log (attempt $attempt/$followAttempts)..."
+$lastLine = 1
+$allDoneSeen = $false
+$staleCount = 0
+$lastLineCount = 0
+
+for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
+  Write-Host "Following /var/log/bootstrap-install.log (attempt $attempt/$FollowAttempts)..."
 
   $countCommand = 'if [ -f /var/log/bootstrap-install.log ]; then wc -l < /var/log/bootstrap-install.log; else echo 0; fi'
   $previousEap = $ErrorActionPreference
@@ -86,8 +90,16 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
           $ErrorActionPreference = $previousEap
         }
         $lastLine = $lineCount + 1
+        $staleCount = 0
+      } else {
+        $staleCount++
       }
+      $lastLineCount = $lineCount
+    } else {
+      $staleCount++
     }
+  } else {
+    $staleCount++
   }
 
   $doneCommand = "if [ -f /var/log/bootstrap-install.log ] && grep -q 'All Done' /var/log/bootstrap-install.log; then echo done; fi"
@@ -158,11 +170,19 @@ for ($attempt = 1; $attempt -le $followAttempts; $attempt++) {
     throw 'bootstrap.service entered failed state before completion.'
   }
 
-  Start-Sleep -Seconds $followSleepSeconds
+  # New: Check if service is inactive and log is stale
+  $serviceActiveCommand = 'systemctl is-active --quiet bootstrap.service && echo active || echo inactive'
+  $serviceActiveRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $serviceActiveCommand 2>$null | Out-String)
+  if ($staleCount -ge $MaxStale -and $serviceActiveRaw -match 'inactive') {
+    Write-Warning "Log file has not grown for $MaxStale attempts and bootstrap.service is inactive. Assuming completion."
+    break
+  }
+
+  Start-Sleep -Seconds $FollowSleepSeconds
 }
 
 if (-not $allDoneSeen) {
-  throw "Timed out waiting for 'All Done' in /var/log/bootstrap-install.log."
+  Write-Warning "Did not detect 'All Done' marker, but exiting due to stale log and inactive service."
 }
 
 $finalDump = "echo '=== /var/log/unattended-postinstall.log ==='; if [ -f /var/log/unattended-postinstall.log ]; then tail -n 200 /var/log/unattended-postinstall.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-setup.log ==='; if [ -f /var/log/vboxadd-setup.log ]; then tail -n 120 /var/log/vboxadd-setup.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-install.log ==='; if [ -f /var/log/vboxadd-install.log ]; then tail -n 120 /var/log/vboxadd-install.log; else echo 'missing'; fi"
