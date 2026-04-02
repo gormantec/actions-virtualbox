@@ -48,4 +48,4 @@ runs:
           -OfflineAttempts ${{ inputs.offline_attempts }} `
           -OfflineSleepSeconds ${{ inputs.offline_sleep_seconds }} `
           -OnlineAttempts ${{ inputs.online_attempts }} `
-          -OnlineSleepSeconds ${{ inputs.online_sleep_seconds }}'
+          -OnlineSleepSeconds ${{ inputs.online_sleep_seconds }}
