@@ -21,23 +21,11 @@ inputs:
   base_vm_host_password:
     description: "Password for base guest user."
     required: true
-  bootstrap_install_env_b64:
-    description: "Base64 encoded env file."
-    required: true
   github_token:
     description: "GitHub token for API download."
     required: true
-  github_copilot_token:
-    description: "GitHub Copilot token for copilot models."
-    required: true
-  github_bridge_token:
-    description: "GitHub Copilot token for copilot models."
-    required: true
-  gemini_token:
-    description: "Gemini token for genini models."
-    required: true
-  cloudflare_tunnel_token:
-    description: "cloudflare tunnel token for web access."
+  bootstrap_env_json:
+    description: "JSON string of all environment variables to inject into /root/bootstrap-install.env."
     required: true
   guestcontrol_attempts:
     description: "Attempts for guestcontrol ready."
@@ -73,12 +61,8 @@ runs:
           -BootstrapRef "${{ github.action_ref || 'main' }}" `
           -InstallScriptPath '${{ inputs.install_script_path }}' `
           -BaseVmHostPassword '${{ inputs.base_vm_host_password }}' `
-          -BootstrapInstallEnvB64 '${{ inputs.bootstrap_install_env_b64 }}' `
           -GitHubToken '${{ inputs.github_token }}' `
-          -GitHubCopilotToken '${{ inputs.github_copilot_token }}' `
-          -GitHubBridgeToken '${{ inputs.github_bridge_token }}' `
-          -GeminiToken '${{ inputs.gemini_token }}' `
-          -CloudflareTunnelToken '${{ inputs.cloudflare_tunnel_token }}' `
+          -BootstrapEnvJson '${{ inputs.bootstrap_env_json }}' `
           -VBoxManagePath '${{ inputs.vboxmanage_path }}' `
           -GuestControlAttempts ${{ inputs.guestcontrol_attempts }} `
           -GuestControlSleepSeconds ${{ inputs.guestcontrol_sleep_seconds }}

@@ -8,12 +8,8 @@ param(
   [string]$BootstrapRef = '',
   [string]$InstallScriptPath = 'install_bootstrap.sh',
   [string]$BaseVmHostPassword,
-  [string]$BootstrapInstallEnvB64,
   [string]$GitHubToken,
-  [string]$GitHubCopilotToken,
-  [string]$GitHubBridgeToken,
-  [string]$GeminiToken,
-  [string]$CloudflareTunnelToken,
+  [string]$BootstrapEnvJson,
   [string]$VBoxManagePath = 'C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe',
   [int]$GuestControlAttempts = 36,
   [int]$GuestControlSleepSeconds = 20
@@ -66,9 +62,7 @@ if ([string]::IsNullOrWhiteSpace($BootstrapRef)) {
 if ([string]::IsNullOrWhiteSpace($InstallScriptPath)) {
   throw 'install_script_path cannot be empty.'
 }
-if ([string]::IsNullOrWhiteSpace($BootstrapInstallEnvB64)) {
-  throw 'Missing required secret BOOTSTRAP_INSTALL_ENV_B64 for guest bootstrap.'
-}
+
 
 Write-Host "Using config repository: $ConfigRepo"
 Write-Host "Using bootstrap helper repository: $BootstrapRepo@$BootstrapRef (repo source: $bootstrapRepoSource, ref source: $bootstrapRefSource)"
@@ -111,16 +105,25 @@ Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmU
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$installScriptUrl' -o $installScriptGuestPath"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$bootstrapScriptUrl' -o $bootstrapScriptGuestPath"
 
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '%s' '$BootstrapInstallEnvB64' | base64 -d > /root/bootstrap-install.env"
-Write-Host 'Wrote env file from BOOTSTRAP_INSTALL_ENV_B64'
-# Append the Token on a new line (Fix: use $GitHubToken and add \n)
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_TOKEN=%s' '$GitHubToken' >> /root/bootstrap-install.env"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_COPILOT_TOKEN=%s' '$GitHubCopilotToken' >> /root/bootstrap-install.env"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGITHUB_BRIDGE_TOKEN=%s' '$GitHubBridgeToken' >> /root/bootstrap-install.env"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nGEMINI_TOKEN=%s' '$GeminiToken' >> /root/bootstrap-install.env"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nCLOUDFLARE_TUNNEL_TOKEN=%s' '$CloudflareTunnelToken' >> /root/bootstrap-install.env"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; printf '\nCONFIG_REPO=%s' '$ConfigRepo' >> /root/bootstrap-install.env"
-Write-Host 'Appended to env file'
+
+# Write all key-value pairs from BootstrapEnvJson to /root/bootstrap-install.env
+$envTempFile = [System.IO.Path]::GetTempFileName()
+$envObj = $null
+try {
+  $envObj = $BootstrapEnvJson | ConvertFrom-Json
+} catch {
+  throw "Failed to parse bootstrap_env_json as JSON: $_"
+}
+if ($null -eq $envObj) {
+  throw "bootstrap_env_json did not produce a valid object."
+}
+$lines = @()
+foreach ($kv in $envObj.PSObject.Properties) {
+  $lines += ("{0}={1}" -f $kv.Name, $kv.Value)
+}
+[System.IO.File]::WriteAllLines($envTempFile, $lines)
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; cat '$envTempFile' > /root/bootstrap-install.env"
+Write-Host 'Wrote env file from bootstrap_env_json'
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/bootstrap-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/bootstrap-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/bootstrap-install.env; fi"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; chmod +x $installScriptGuestPath $bootstrapScriptGuestPath"
