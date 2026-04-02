@@ -30,6 +30,9 @@ inputs:
   github_copilot_token:
     description: "GitHub Copilot token for copilot models."
     required: true
+  github_bridge_token:
+    description: "GitHub Copilot token for copilot models."
+    required: true
   gemini_token:
     description: "Gemini token for genini models."
     required: true
@@ -65,6 +68,7 @@ runs:
           -BootstrapInstallEnvB64 '${{ inputs.bootstrap_install_env_b64 }}' `
           -GitHubToken '${{ inputs.github_token }}' `
           -GitHubCopilotToken '${{ inputs.github_copilot_token }}' `
+          -GitHubBridgeToken '${{ inputs.github_bridge_token }}' `
           -GeminiToken '${{ inputs.gemini_token }}' `
           -CloudflareTunnelToken '${{ inputs.cloudflare_tunnel_token }}' `
           -VBoxManagePath '${{ inputs.vboxmanage_path }}'
