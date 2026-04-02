@@ -106,8 +106,8 @@ Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmU
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; curl -fsSL $curlAuth '$bootstrapScriptUrl' -o $bootstrapScriptGuestPath"
 
 
-# Write all key-value pairs from BootstrapEnvJson to /root/bootstrap-install.env
-$envTempFile = [System.IO.Path]::GetTempFileName()
+
+# Assemble env file as a string in memory and echo it into the guest
 $envObj = $null
 try {
   $envObj = $BootstrapEnvJson | ConvertFrom-Json
@@ -117,13 +117,15 @@ try {
 if ($null -eq $envObj) {
   throw "bootstrap_env_json did not produce a valid object."
 }
-$lines = @()
-foreach ($kv in $envObj.PSObject.Properties) {
-  $lines += ("{0}={1}" -f $kv.Name, $kv.Value)
-}
-[System.IO.File]::WriteAllLines($envTempFile, $lines)
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; cat '$envTempFile' > /root/bootstrap-install.env"
-Write-Host 'Wrote env file from bootstrap_env_json'
+$envContent = ($envObj.PSObject.Properties | ForEach-Object { "{0}={1}" -f $_.Name, $_.Value }) -join "`n"
+# Escape for single-quoted bash heredoc
+$heredoc = @(
+  "cat <<'EOF' > /root/bootstrap-install.env",
+  $envContent,
+  "EOF"
+) -join "`n"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; $heredoc"
+Write-Host 'Wrote env file from bootstrap_env_json (in-memory, not written to host disk)'
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/bootstrap-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/bootstrap-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/bootstrap-install.env; fi"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; chmod +x $installScriptGuestPath $bootstrapScriptGuestPath"
