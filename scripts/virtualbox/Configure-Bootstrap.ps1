@@ -120,6 +120,7 @@ if ($null -eq $envObj) {
 # Always wrap values in double quotes and escape embedded quotes and backslashes
 $envContent = ($envObj.PSObject.Properties | ForEach-Object {
   $key = $_.Name
+  Write-Host "Adding ENV variable '$key' to guest env file from bootstrap_env_json"
   $val = [string]$_.Value
   $escaped = $val -replace '\\', '\\\\' -replace '"', '\\"'
   "{0}=""{1}""" -f $key, $escaped
