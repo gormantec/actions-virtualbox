@@ -125,14 +125,12 @@ $envContent = ($envObj.PSObject.Properties | ForEach-Object {
   $escaped = $val -replace '\\', '\\\\' -replace '"', '\\"'
   "{0}=""{1}""" -f $key, $escaped
 }) -join "`n"
-# Escape for single-quoted bash heredoc
-$heredoc = @(
-  "cat <<'EOF' > /root/bootstrap-install.env",
-  $envContent,
-  "EOF"
-) -join "`n"
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; $heredoc"
-Write-Host 'Wrote env file from bootstrap_env_json (in-memory, not written to host disk)'
+# Use base64 to robustly inject env file content
+$envContentBytes = [System.Text.Encoding]::UTF8.GetBytes($envContent)
+$envContentBase64 = [Convert]::ToBase64String($envContentBytes)
+$b64Cmd = "echo '$envContentBase64' | base64 -d > /root/bootstrap-install.env"
+Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; $b64Cmd"
+Write-Host 'Wrote env file from bootstrap_env_json (base64, in-memory, not written to host disk)'
 
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/bootstrap-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/bootstrap-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/bootstrap-install.env; fi"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; chmod +x $installScriptGuestPath $bootstrapScriptGuestPath"
