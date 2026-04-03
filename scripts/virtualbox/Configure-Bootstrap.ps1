@@ -129,12 +129,13 @@ $envContent = ($envObj.PSObject.Properties | ForEach-Object {
 $envContentBytes = [System.Text.Encoding]::UTF8.GetBytes($envContent)
 $envContentBase64 = [Convert]::ToBase64String($envContentBytes)
 $b64Cmd = "echo '$envContentBase64' | base64 -d > /root/bootstrap-install.env"
+
+# Write-Host "Writing env file to guest with content:`n$envContent"
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; $b64Cmd"
 Write-Host 'Wrote env file from bootstrap_env_json (base64, in-memory, not written to host disk)'
 
-Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; if grep -q '^TARGET_USER=' /root/bootstrap-install.env; then sed -i 's/^TARGET_USER=.*/TARGET_USER=$VmUser/' /root/bootstrap-install.env; else printf '\nTARGET_USER=$VmUser\n' >> /root/bootstrap-install.env; fi"
+# Make the scripts executable and run the bootstrap helper script, which will in turn run the install script. The helper script is responsible for placing the install script in the right location and configuring the systemd service to run it at boot.
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; chmod +x $installScriptGuestPath $bootstrapScriptGuestPath"
-
 # Run the bootstrap helper script
 Invoke-GuestRootBash -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -Command "set -euo pipefail; bash $bootstrapScriptGuestPath --script $installScriptGuestPath --env /root/bootstrap-install.env"
 # Delete the install script from /root after bootstrap is configured
