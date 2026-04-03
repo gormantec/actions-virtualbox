@@ -78,14 +78,15 @@ function Wait-GuestControlReady {
     }
 
     if (Test-GuestControlReady -VBoxManage $VBoxManage -VmName $VmName -GuestUser $GuestUser -GuestPassword $GuestPassword) {
-      return
+      return $true
     }
 
     Start-Sleep -Seconds $SleepSeconds
   }
 
   if (-not $ResetOnFailure) {
-    throw $FailureMessage
+    Write-Warning $FailureMessage
+    return $false
   }
 
   Write-Warning "Guest control not ready yet. Resetting VM once and retrying."
@@ -105,13 +106,14 @@ function Wait-GuestControlReady {
     }
 
     if (Test-GuestControlReady -VBoxManage $VBoxManage -VmName $VmName -GuestUser $GuestUser -GuestPassword $GuestPassword) {
-      return
+      return $true
     }
 
     Start-Sleep -Seconds $SleepSeconds
   }
 
-  throw $FailureMessage
+  Write-Warning $FailureMessage
+  return $false
 }
 
 function Invoke-GuestRootBash {

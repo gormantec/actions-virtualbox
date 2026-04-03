@@ -19,9 +19,14 @@ $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 $probeCommand = 'test -f /var/log/unattended-postinstall.log || test -f /var/log/bootstrap-install.log'
 $maxAttempts = 30
 $sleepSeconds = 10
+
 $logsReady = $false
 
-Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $maxAttempts -SleepSeconds $sleepSeconds -AttemptLabel 'Waiting for guestcontrol after reboot' -FailureMessage 'Guest control did not become ready after reboot.'
+$guestReady = Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $maxAttempts -SleepSeconds $sleepSeconds -AttemptLabel 'Waiting for guestcontrol after reboot' -FailureMessage 'Guest control did not become ready after reboot.'
+if (-not $guestReady) {
+  Write-Error 'Guest control did not become ready after reboot. Please check VBox logs and guest boot logs for more details.'
+  return 2
+}
 
 function Test-GuestLogsPresent {
   $previousEap = $ErrorActionPreference

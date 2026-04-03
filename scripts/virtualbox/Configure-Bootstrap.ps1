@@ -67,9 +67,14 @@ if ([string]::IsNullOrWhiteSpace($InstallScriptPath)) {
 Write-Host "Using config repository: $ConfigRepo"
 Write-Host "Using bootstrap helper repository: $BootstrapRepo@$BootstrapRef (repo source: $bootstrapRepoSource, ref source: $bootstrapRefSource)"
 
+
 $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
-Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready after reset. Check VBox logs and guest boot logs.' -ResetOnFailure -LogGuestAdditions
+$guestReady = Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready after reset. Check VBox logs and guest boot logs.' -ResetOnFailure -LogGuestAdditions
+if (-not $guestReady) {
+  Write-Error 'Guest control never became ready after reset. Please check VBox logs and guest boot logs for more details.'
+  return 2
+}
 
 $repoApi = "https://api.github.com/repos/$ConfigRepo/contents"
 $bootstrapRepoApi = "https://api.github.com/repos/$BootstrapRepo/contents"

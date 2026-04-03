@@ -83,7 +83,8 @@ if (-not $running) {
   throw "VM '$VmName' did not return to a running state after reboot."
 }
 
-Wait-GuestControlReady `
+
+$guestReady = Wait-GuestControlReady `
   -VBoxManage $vboxManage `
   -VmName $VmName `
   -GuestUser $BaseVmUser `
@@ -92,5 +93,9 @@ Wait-GuestControlReady `
   -SleepSeconds 20 `
   -AttemptLabel 'Waiting for guest control after reboot' `
   -FailureMessage "Guest control did not become ready after rebooting '$VmName'."
+if (-not $guestReady) {
+  Write-Error "Guest control did not become ready after rebooting '$VmName'. Please check VBox logs and guest boot logs for more details."
+  return 2
+}
 
 Write-Host 'Guest is up and ready after reboot.'
