@@ -27,19 +27,43 @@ if (-not $guestReady) {
   Stop-Action -Message 'Guest control did not become ready after reboot. Please check VBox logs and guest boot logs for more details.'
 }
 
-function Test-GuestLogsPresent {
+function Invoke-GuestControlCommand {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Command
+  )
+
   $previousEap = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
+  $output = ''
   $exitCode = 1
+
   try {
-    & $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $probeCommand 2>$null | Out-Null
+    $output = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $Command 2>&1 | Out-String)
     $exitCode = $LASTEXITCODE
   } catch {
-    $exitCode = 1
+    $output = $_.Exception.Message
+    if ($LASTEXITCODE -is [int]) {
+      $exitCode = $LASTEXITCODE
+    }
   } finally {
     $ErrorActionPreference = $previousEap
   }
-  return ($exitCode -eq 0)
+
+  $trimmedOutput = $output.TrimEnd("`r", "`n")
+  $guestExecutionServiceNotReady = $trimmedOutput -match 'guest execution service is not ready'
+
+  return [pscustomobject]@{
+    ExitCode = $exitCode
+    Output = $trimmedOutput
+    Succeeded = ($exitCode -eq 0)
+    GuestExecutionServiceNotReady = $guestExecutionServiceNotReady
+  }
+}
+
+function Test-GuestLogsPresent {
+  $probeResult = Invoke-GuestControlCommand -Command $probeCommand
+  return $probeResult.Succeeded
 }
 
 for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
@@ -59,46 +83,42 @@ if (-not $logsReady) {
 $lastLine = 1
 $allDoneSeen = $false
 $staleCount = 0
-$lastLineCount = 0
+$endedDueToInactiveStaleLog = $false
 
 for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
   Write-Host "Following /var/log/bootstrap-install.log (attempt $attempt/$FollowAttempts)..."
 
   $countCommand = 'if [ -f /var/log/bootstrap-install.log ]; then wc -l < /var/log/bootstrap-install.log; else echo 0; fi'
-  $previousEap = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  $lineCountRaw = ''
-  $lineCountExit = 1
-  try {
-    $lineCountRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $countCommand 2>$null | Out-String)
-    $lineCountExit = $LASTEXITCODE
-  } catch {
-    $lineCountExit = 1
-  } finally {
-    $ErrorActionPreference = $previousEap
+  $lineCountResult = Invoke-GuestControlCommand -Command $countCommand
+
+  if ($lineCountResult.GuestExecutionServiceNotReady) {
+    Write-Host 'Guest execution service is not ready yet. Retrying log follow on the next attempt.'
+    Start-Sleep -Seconds $FollowSleepSeconds
+    continue
   }
 
-  if ($lineCountExit -eq 0) {
-    $lineCountMatch = [regex]::Match($lineCountRaw, '(?m)^\s*(\d+)\s*$')
+  if ($lineCountResult.Succeeded) {
+    $lineCountMatch = [regex]::Match($lineCountResult.Output, '(?m)^\s*(\d+)\s*$')
     if ($lineCountMatch.Success) {
       $lineCount = [int]$lineCountMatch.Groups[1].Value
       if ($lineCount -ge $lastLine) {
         $chunkCommand = "sed -n '$lastLine,${lineCount}p' /var/log/bootstrap-install.log"
-        $previousEap = $ErrorActionPreference
-        $ErrorActionPreference = 'Continue'
-        try {
-          & $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $chunkCommand
-        } catch {
+        $chunkResult = Invoke-GuestControlCommand -Command $chunkCommand
+        if ($chunkResult.Succeeded) {
+          if (-not [string]::IsNullOrWhiteSpace($chunkResult.Output)) {
+            Write-Host $chunkResult.Output
+          }
+        } elseif (-not $chunkResult.GuestExecutionServiceNotReady) {
           Write-Warning 'Unable to read log chunk on this attempt.'
-        } finally {
-          $ErrorActionPreference = $previousEap
         }
-        $lastLine = $lineCount + 1
-        $staleCount = 0
+
+        if ($chunkResult.Succeeded) {
+          $lastLine = $lineCount + 1
+          $staleCount = 0
+        }
       } else {
         $staleCount++
       }
-      $lastLineCount = $lineCount
     } else {
       $staleCount++
     }
@@ -107,95 +127,86 @@ for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
   }
 
   $doneCommand = "if [ -f /var/log/bootstrap-install.log ] && grep -q 'All Done' /var/log/bootstrap-install.log; then echo done; fi"
-  $previousEap = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  $doneRaw = ''
-  $doneExit = 1
-  try {
-    $doneRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $doneCommand 2>$null | Out-String)
-    $doneExit = $LASTEXITCODE
-  } catch {
-    $doneExit = 1
-  } finally {
-    $ErrorActionPreference = $previousEap
+  $doneResult = Invoke-GuestControlCommand -Command $doneCommand
+
+  if ($doneResult.GuestExecutionServiceNotReady) {
+    Write-Host 'Guest execution service became temporarily unavailable while checking completion. Retrying.'
+    Start-Sleep -Seconds $FollowSleepSeconds
+    continue
   }
 
-  if ($doneExit -eq 0 -and $doneRaw -match 'done') {
+  if ($doneResult.Succeeded -and $doneResult.Output -match 'done') {
     Write-Host "Detected completion marker 'All Done' in /var/log/bootstrap-install.log."
     $allDoneSeen = $true
     break
   }
 
   $configValidationErrorCommand = "if [ -f /var/log/bootstrap-install.log ] && grep -q 'Error: Config validation failed' /var/log/bootstrap-install.log; then echo config-validation-failed; fi"
-  $previousEap = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  $configValidationErrorRaw = ''
-  $configValidationErrorExit = 1
-  try {
-    $configValidationErrorRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $configValidationErrorCommand 2>$null | Out-String)
-    $configValidationErrorExit = $LASTEXITCODE
-  } catch {
-    $configValidationErrorExit = 1
-  } finally {
-    $ErrorActionPreference = $previousEap
+  $configValidationResult = Invoke-GuestControlCommand -Command $configValidationErrorCommand
+
+  if ($configValidationResult.GuestExecutionServiceNotReady) {
+    Write-Host 'Guest execution service became temporarily unavailable while checking config validation. Retrying.'
+    Start-Sleep -Seconds $FollowSleepSeconds
+    continue
   }
 
-  if ($configValidationErrorExit -eq 0 -and $configValidationErrorRaw -match 'config-validation-failed') {
+  if ($configValidationResult.Succeeded -and $configValidationResult.Output -match 'config-validation-failed') {
     throw "Detected 'Error: Config validation failed' in /var/log/bootstrap-install.log."
   }
 
   $failedCommand = 'if systemctl is-failed --quiet bootstrap.service; then echo failed; fi'
-  $previousEap = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  $failedRaw = ''
-  $failedExit = 1
-  try {
-    $failedRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $failedCommand 2>$null | Out-String)
-    $failedExit = $LASTEXITCODE
-  } catch {
-    $failedExit = 1
-  } finally {
-    $ErrorActionPreference = $previousEap
+  $failedResult = Invoke-GuestControlCommand -Command $failedCommand
+
+  if ($failedResult.GuestExecutionServiceNotReady) {
+    Write-Host 'Guest execution service became temporarily unavailable while checking service status. Retrying.'
+    Start-Sleep -Seconds $FollowSleepSeconds
+    continue
   }
 
-  if ($failedExit -eq 0 -and $failedRaw -match 'failed') {
+  if ($failedResult.Succeeded -and $failedResult.Output -match 'failed') {
     Write-Warning 'Detected failed state for bootstrap.service. Dumping service diagnostics...'
     $serviceDiag = "echo '=== systemctl status bootstrap.service ==='; systemctl --no-pager --full status bootstrap.service || true; echo ''; echo '=== journalctl -u bootstrap.service (last 120 lines) ==='; journalctl -u bootstrap.service --no-pager -n 120 || true"
-    $previousEap = $ErrorActionPreference
-    $ErrorActionPreference = 'Continue'
-    try {
-      & $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $serviceDiag
-    } catch {
+
+    $serviceDiagResult = Invoke-GuestControlCommand -Command $serviceDiag
+    if ($serviceDiagResult.Succeeded) {
+      if (-not [string]::IsNullOrWhiteSpace($serviceDiagResult.Output)) {
+        Write-Host $serviceDiagResult.Output
+      }
+    } elseif (-not $serviceDiagResult.GuestExecutionServiceNotReady) {
       Write-Warning 'Unable to fetch bootstrap service diagnostics.'
-    } finally {
-      $ErrorActionPreference = $previousEap
     }
 
     throw 'bootstrap.service entered failed state before completion.'
   }
 
-  # New: Check if service is inactive and log is stale
   $serviceActiveCommand = 'systemctl is-active --quiet bootstrap.service && echo active || echo inactive'
-  $serviceActiveRaw = (& $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $serviceActiveCommand 2>$null | Out-String)
-  if ($staleCount -ge $MaxStale -and $serviceActiveRaw -match 'inactive') {
+  $serviceActiveResult = Invoke-GuestControlCommand -Command $serviceActiveCommand
+
+  if ($serviceActiveResult.GuestExecutionServiceNotReady) {
+    Write-Host 'Guest execution service became temporarily unavailable while checking whether bootstrap.service is still active. Retrying.'
+    Start-Sleep -Seconds $FollowSleepSeconds
+    continue
+  }
+
+  if ($staleCount -ge $MaxStale -and $serviceActiveResult.Succeeded -and $serviceActiveResult.Output -match 'inactive') {
     Write-Warning "Log file has not grown for $MaxStale attempts and bootstrap.service is inactive. Assuming completion."
+    $endedDueToInactiveStaleLog = $true
     break
   }
 
   Start-Sleep -Seconds $FollowSleepSeconds
 }
 
-if (-not $allDoneSeen) {
+if (-not $allDoneSeen -and $endedDueToInactiveStaleLog) {
   Write-Warning "Did not detect 'All Done' marker, but exiting due to stale log and inactive service."
 }
 
 $finalDump = "echo '=== /var/log/unattended-postinstall.log ==='; if [ -f /var/log/unattended-postinstall.log ]; then tail -n 200 /var/log/unattended-postinstall.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-setup.log ==='; if [ -f /var/log/vboxadd-setup.log ]; then tail -n 120 /var/log/vboxadd-setup.log; else echo 'missing'; fi; echo ''; echo '=== /var/log/vboxadd-install.log ==='; if [ -f /var/log/vboxadd-install.log ]; then tail -n 120 /var/log/vboxadd-install.log; else echo 'missing'; fi"
-$previousEap = $ErrorActionPreference
-$ErrorActionPreference = 'Continue'
-try {
-  & $vboxManage guestcontrol $VmName run --username $BaseVmUser --password $BaseVmHostPassword --exe /usr/bin/sudo -- sudo -n bash -lc $finalDump
-} catch {
+$finalDumpResult = Invoke-GuestControlCommand -Command $finalDump
+if ($finalDumpResult.Succeeded) {
+  if (-not [string]::IsNullOrWhiteSpace($finalDumpResult.Output)) {
+    Write-Host $finalDumpResult.Output
+  }
+} elseif (-not $finalDumpResult.GuestExecutionServiceNotReady) {
   Write-Warning 'Best-effort final log dump failed.'
-} finally {
-  $ErrorActionPreference = $previousEap
 }
