@@ -25,11 +25,11 @@ inputs:
   guestcontrol_attempts:
     description: Attempts for guestcontrol ready.
     required: false
-    default: 18
+    default: 10
   guestcontrol_sleep_seconds:
     description: Seconds to sleep between guestcontrol ready checks.
     required: false
-    default: 20
+    default: 10
 
 runs:
   using: composite
