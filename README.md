@@ -83,6 +83,95 @@ Example:
 		vm_name: new-vm
 ```
 
+### `virtualbox-wait-for-state`
+
+Polls `VBoxManage showvminfo --machinereadable` until the VM reaches one of the requested `VMState` values.
+
+Action:
+
+```yaml
+uses: gormantec/actions-virtualbox/virtualbox-wait-for-state@v1
+```
+
+Mandatory inputs:
+
+- `allowed_states`: Newline-separated list of acceptable `VMState` values such as `running`, `poweroff`, `saved`, or `aborted`.
+
+Optional inputs:
+
+- `vm_name` (default: `new-vm`): Target VM name.
+- `timeout_seconds` (default: `300`): Seconds to wait before timing out. Use `0` to wait indefinitely.
+- `poll_interval_seconds` (default: `5`): Seconds between VM state checks.
+- `fail_on_timeout` (default: `true`): Whether the action should fail when the timeout is reached.
+- `vboxmanage_path` (default: `C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe`): Path to `VBoxManage.exe`.
+
+Outputs:
+
+- `final_state`: Final VM state observed before the action completed.
+- `reached_state`: `true` if an allowed state was reached, else `false`.
+
+Example:
+
+```yaml
+- name: Wait for VM power off
+	uses: gormantec/actions-virtualbox/virtualbox-wait-for-state@v1
+	with:
+		vm_name: ubuntu-24-04
+		allowed_states: |
+			poweroff
+			aborted
+		timeout_seconds: "600"
+```
+
+### `virtualbox-run-guest-bash`
+
+Runs a bash script inside a guest via `VBoxManage guestcontrol`, with optional guestcontrol readiness polling first.
+
+Action:
+
+```yaml
+uses: gormantec/actions-virtualbox/virtualbox-run-guest-bash@v1
+```
+
+Mandatory inputs:
+
+- `guest_user`: Guest username used for authentication.
+- `guest_password`: Guest password used for authentication.
+- `script`: Bash script content passed to `bash -lc`.
+
+Optional inputs:
+
+- `vm_name` (default: `new-vm`): Target VM name.
+- `timeout_ms` (default: `600000`): Command timeout in milliseconds.
+- `wait_for_guestcontrol` (default: `true`): Whether to wait for guestcontrol before running the script.
+- `guestcontrol_attempts` (default: `18`): Guestcontrol readiness attempts.
+- `guestcontrol_sleep_seconds` (default: `20`): Delay between readiness attempts.
+- `reset_on_guestcontrol_failure` (default: `false`): Reset the VM once if guestcontrol never becomes ready on the first pass.
+- `log_guest_additions` (default: `false`): Log Guest Additions state while polling.
+- `allow_failure` (default: `false`): Whether a non-zero guest command exit code should be tolerated.
+- `wait_stdout` (default: `true`): Pass `--wait-stdout` to `guestcontrol run`.
+- `wait_stderr` (default: `true`): Pass `--wait-stderr` to `guestcontrol run`.
+- `vboxmanage_path` (default: `C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe`): Path to `VBoxManage.exe`.
+
+Outputs:
+
+- `exit_code`: Exit code from the guest bash command.
+
+Example:
+
+```yaml
+- name: Run guest bootstrap
+	uses: gormantec/actions-virtualbox/virtualbox-run-guest-bash@v1
+	with:
+		vm_name: ubuntu-24-04
+		guest_user: vmhost
+		guest_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
+		timeout_ms: "1800000"
+		script: |
+			set -euo pipefail
+			command -v python3 >/dev/null
+```
+
 ### `virtualbox-ensure-new-user`
 
 Ensures a target user exists inside the guest and applies related user/hostname configuration.

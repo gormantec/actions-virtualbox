@@ -1,0 +1,88 @@
+name: VirtualBox Run Guest Bash
+description: Run a bash script inside a guest via VBoxManage guestcontrol.
+
+inputs:
+  vm_name:
+    description: Target VM name.
+    required: false
+    default: new-vm
+  guest_user:
+    description: Guest username for guestcontrol authentication.
+    required: true
+  guest_password:
+    description: Guest password for guestcontrol authentication.
+    required: true
+  script:
+    description: Bash script content passed to bash -lc.
+    required: true
+  timeout_ms:
+    description: Command timeout in milliseconds.
+    required: false
+    default: "600000"
+  wait_for_guestcontrol:
+    description: Whether to wait for guestcontrol before running the script.
+    required: false
+    default: "true"
+  guestcontrol_attempts:
+    description: Attempts for guestcontrol readiness.
+    required: false
+    default: "18"
+  guestcontrol_sleep_seconds:
+    description: Seconds to sleep between guestcontrol readiness checks.
+    required: false
+    default: "20"
+  reset_on_guestcontrol_failure:
+    description: Reset the VM once if guestcontrol does not become ready initially.
+    required: false
+    default: "false"
+  log_guest_additions:
+    description: Log Guest Additions state while waiting for guestcontrol.
+    required: false
+    default: "false"
+  allow_failure:
+    description: Allow the guest command to exit non-zero.
+    required: false
+    default: "false"
+  wait_stdout:
+    description: Pass --wait-stdout to guestcontrol run.
+    required: false
+    default: "true"
+  wait_stderr:
+    description: Pass --wait-stderr to guestcontrol run.
+    required: false
+    default: "true"
+  vboxmanage_path:
+    description: Path to VBoxManage.exe.
+    required: false
+    default: "C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe"
+
+outputs:
+  exit_code:
+    description: Exit code returned by the guest bash command.
+    value: ${{ steps.run.outputs.exit_code }}
+
+runs:
+  using: composite
+  steps:
+    - id: run
+      name: Run guest bash
+      shell: powershell
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Run-GuestBash.ps1'
+        & $scriptPath `
+          -VmName '${{ inputs.vm_name }}' `
+          -GuestUser '${{ inputs.guest_user }}' `
+          -GuestPassword '${{ inputs.guest_password }}' `
+          -Script @'
+${{ inputs.script }}
+'@ `
+          -TimeoutMs ([int]'${{ inputs.timeout_ms }}') `
+          -WaitForGuestControl (('${{ inputs.wait_for_guestcontrol }}').ToLowerInvariant() -eq 'true') `
+          -GuestControlAttempts ([int]'${{ inputs.guestcontrol_attempts }}') `
+          -GuestControlSleepSeconds ([int]'${{ inputs.guestcontrol_sleep_seconds }}') `
+          -ResetOnGuestControlFailure (('${{ inputs.reset_on_guestcontrol_failure }}').ToLowerInvariant() -eq 'true') `
+          -LogGuestAdditions (('${{ inputs.log_guest_additions }}').ToLowerInvariant() -eq 'true') `
+          -AllowFailure (('${{ inputs.allow_failure }}').ToLowerInvariant() -eq 'true') `
+          -WaitStdout (('${{ inputs.wait_stdout }}').ToLowerInvariant() -eq 'true') `
+          -WaitStderr (('${{ inputs.wait_stderr }}').ToLowerInvariant() -eq 'true') `
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}'

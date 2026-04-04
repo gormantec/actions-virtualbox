@@ -150,3 +150,46 @@ function Invoke-GuestRootBash {
 
   return $exitCode
 }
+
+function Invoke-GuestBash {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$VBoxManage,
+    [Parameter(Mandatory = $true)]
+    [string]$VmName,
+    [Parameter(Mandatory = $true)]
+    [string]$GuestUser,
+    [Parameter(Mandatory = $true)]
+    [string]$GuestPassword,
+    [Parameter(Mandatory = $true)]
+    [string]$Command,
+    [int]$TimeoutMs = 600000,
+    [switch]$AllowFailure,
+    [switch]$WaitStdout,
+    [switch]$WaitStderr
+  )
+
+  $arguments = @(
+    'guestcontrol', $VmName, 'run',
+    '--username', $GuestUser,
+    '--password', $GuestPassword,
+    '--timeout', $TimeoutMs
+  )
+
+  if ($WaitStdout) {
+    $arguments += '--wait-stdout'
+  }
+  if ($WaitStderr) {
+    $arguments += '--wait-stderr'
+  }
+
+  $arguments += @('--exe', '/bin/bash', '--', '-lc', $Command)
+
+  & $VBoxManage @arguments
+  $exitCode = $LASTEXITCODE
+  if (-not $AllowFailure -and $exitCode -ne 0) {
+    throw "Guest command failed (exit code $exitCode): $Command"
+  }
+
+  return $exitCode
+}

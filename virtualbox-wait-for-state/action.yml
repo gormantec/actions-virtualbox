@@ -1,0 +1,51 @@
+name: VirtualBox Wait For State
+description: Wait until a VM reaches one of the requested VirtualBox states.
+
+inputs:
+  vm_name:
+    description: Target VM name.
+    required: false
+    default: new-vm
+  allowed_states:
+    description: Newline-separated list of acceptable VMState values.
+    required: true
+  timeout_seconds:
+    description: Seconds to wait before timing out. Use 0 to wait indefinitely.
+    required: false
+    default: "300"
+  poll_interval_seconds:
+    description: Seconds between VM state checks.
+    required: false
+    default: "5"
+  fail_on_timeout:
+    description: Whether the action should fail when the timeout is reached.
+    required: false
+    default: "true"
+  vboxmanage_path:
+    description: Path to VBoxManage.exe.
+    required: false
+    default: "C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe"
+
+outputs:
+  final_state:
+    description: The final VM state observed before completion.
+    value: ${{ steps.wait.outputs.final_state }}
+  reached_state:
+    description: Whether an allowed state was reached.
+    value: ${{ steps.wait.outputs.reached_state }}
+
+runs:
+  using: composite
+  steps:
+    - id: wait
+      name: Wait for VM state
+      shell: powershell
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Wait-ForState.ps1'
+        & $scriptPath `
+          -VmName '${{ inputs.vm_name }}' `
+          -AllowedStates '${{ inputs.allowed_states }}' `
+          -TimeoutSeconds ([int]'${{ inputs.timeout_seconds }}') `
+          -PollIntervalSeconds ([int]'${{ inputs.poll_interval_seconds }}') `
+          -FailOnTimeout (('${{ inputs.fail_on_timeout }}').ToLowerInvariant() -eq 'true') `
+          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
