@@ -5,11 +5,11 @@ inputs:
   preferred_vboxmanage_path:
     description: Preferred VBoxManage.exe path to probe first.
     required: false
-    default: "C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe"
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
   fallback_vboxmanage_path:
     description: Fallback VBoxManage.exe path to probe before and after install.
     required: false
-    default: "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
+    default: "C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe"
   choco_package_name:
     description: Chocolatey package name used when installation is required.
     required: false

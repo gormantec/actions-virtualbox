@@ -24,7 +24,7 @@ inputs:
   vboxmanage_path:
     description: Path to VBoxManage.exe.
     required: false
-    default: "C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe"
+    default: "C:\\Progra~1\\Oracle\\VirtualBox\\VBoxManage.exe"
 
 outputs:
   final_state:
