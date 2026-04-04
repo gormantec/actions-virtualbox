@@ -1,0 +1,50 @@
+name: VirtualBox Check Install
+description: Ensure VBoxManage.exe exists and install VirtualBox with Chocolatey if needed.
+
+inputs:
+  preferred_vboxmanage_path:
+    description: Preferred VBoxManage.exe path to probe first.
+    required: false
+    default: "C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe"
+  fallback_vboxmanage_path:
+    description: Fallback VBoxManage.exe path to probe before and after install.
+    required: false
+    default: "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
+  choco_package_name:
+    description: Chocolatey package name used when installation is required.
+    required: false
+    default: "virtualbox"
+  install_arguments:
+    description: Extra arguments passed to choco install.
+    required: false
+    default: "-y --no-progress"
+
+outputs:
+  vboxmanage_path:
+    description: Resolved VBoxManage.exe path.
+    value: ${{ steps.check.outputs.vboxmanage_path }}
+  was_installed:
+    description: Whether VirtualBox had to be installed.
+    value: ${{ steps.check.outputs.was_installed }}
+
+runs:
+  using: composite
+  steps:
+    - id: check
+      name: Check or install VirtualBox
+      shell: powershell
+      run: |
+        $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Check-Install.ps1'
+        & $scriptPath `
+          -PreferredVBoxManagePath @'
+${{ inputs.preferred_vboxmanage_path }}
+'@ `
+          -FallbackVBoxManagePath @'
+${{ inputs.fallback_vboxmanage_path }}
+'@ `
+          -ChocoPackageName @'
+${{ inputs.choco_package_name }}
+'@ `
+          -InstallArguments @'
+${{ inputs.install_arguments }}
+'@

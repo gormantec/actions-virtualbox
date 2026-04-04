@@ -15,6 +15,10 @@ inputs:
   script:
     description: Bash script content passed to bash -lc.
     required: true
+  environment_variables:
+    description: Newline-separated KEY=VALUE pairs exported before the script runs.
+    required: false
+    default: ""
   timeout_ms:
     description: Command timeout in milliseconds.
     required: false
@@ -70,11 +74,20 @@ runs:
       run: |
         $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Run-GuestBash.ps1'
         & $scriptPath `
-          -VmName '${{ inputs.vm_name }}' `
-          -GuestUser '${{ inputs.guest_user }}' `
-          -GuestPassword '${{ inputs.guest_password }}' `
+          -VmName @'
+${{ inputs.vm_name }}
+'@ `
+          -GuestUser @'
+${{ inputs.guest_user }}
+'@ `
+          -GuestPassword @'
+${{ inputs.guest_password }}
+'@ `
           -Script @'
 ${{ inputs.script }}
+'@ `
+          -EnvironmentVariables @'
+${{ inputs.environment_variables }}
 '@ `
           -TimeoutMs ([int]'${{ inputs.timeout_ms }}') `
           -WaitForGuestControl (('${{ inputs.wait_for_guestcontrol }}').ToLowerInvariant() -eq 'true') `
@@ -85,4 +98,6 @@ ${{ inputs.script }}
           -AllowFailure (('${{ inputs.allow_failure }}').ToLowerInvariant() -eq 'true') `
           -WaitStdout (('${{ inputs.wait_stdout }}').ToLowerInvariant() -eq 'true') `
           -WaitStderr (('${{ inputs.wait_stderr }}').ToLowerInvariant() -eq 'true') `
-          -VBoxManagePath '${{ inputs.vboxmanage_path }}'
+          -VBoxManagePath @'
+${{ inputs.vboxmanage_path }}
+'@

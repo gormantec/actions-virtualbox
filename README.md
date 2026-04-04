@@ -17,6 +17,46 @@ GitHub Actions syntax is `owner/repo/path@ref` (not `owner/repo:/path`).
 
 ## Actions
 
+### `virtualbox-check-install`
+
+Checks whether `VBoxManage.exe` is already available and installs VirtualBox with Chocolatey if it is missing.
+
+Action:
+
+```yaml
+uses: gormantec/actions-virtualbox/virtualbox-check-install@v1
+```
+
+Mandatory inputs:
+
+- None.
+
+Optional inputs:
+
+- `preferred_vboxmanage_path` (default: `C:\Progra~1\Oracle\VirtualBox\VBoxManage.exe`): Preferred `VBoxManage.exe` path to probe first.
+- `fallback_vboxmanage_path` (default: `C:\Program Files\Oracle\VirtualBox\VBoxManage.exe`): Fallback path checked before and after installation.
+- `choco_package_name` (default: `virtualbox`): Chocolatey package to install when VirtualBox is missing.
+- `install_arguments` (default: `-y --no-progress`): Extra arguments passed to `choco install`.
+
+Outputs:
+
+- `vboxmanage_path`: Resolved `VBoxManage.exe` path to use in later steps.
+- `was_installed`: `true` if the action had to install VirtualBox, else `false`.
+
+Example:
+
+```yaml
+- name: Ensure VirtualBox is available
+	id: virtualbox
+	uses: gormantec/actions-virtualbox/virtualbox-check-install@v1
+
+- name: Start VM
+	uses: gormantec/actions-virtualbox/virtualbox-start-vm@v1
+	with:
+		vm_name: new-vm
+		vboxmanage_path: ${{ steps.virtualbox.outputs.vboxmanage_path }}
+```
+
 ### `virtualbox-clone-vm`
 
 Clones a target VM from a base VM (optionally from a snapshot) and applies VM runtime settings.
@@ -142,6 +182,7 @@ Mandatory inputs:
 Optional inputs:
 
 - `vm_name` (default: `new-vm`): Target VM name.
+- `environment_variables` (default: empty): Newline-separated `KEY=VALUE` pairs exported before the script runs.
 - `timeout_ms` (default: `600000`): Command timeout in milliseconds.
 - `wait_for_guestcontrol` (default: `true`): Whether to wait for guestcontrol before running the script.
 - `guestcontrol_attempts` (default: `18`): Guestcontrol readiness attempts.
@@ -166,9 +207,12 @@ Example:
 		vm_name: ubuntu-24-04
 		guest_user: vmhost
 		guest_password: ${{ secrets.BASE_VM_HOST_PASSWORD }}
+		environment_variables: |
+			BASE_VM_USER=vmhost
 		timeout_ms: "1800000"
 		script: |
 			set -euo pipefail
+			echo "$BASE_VM_USER"
 			command -v python3 >/dev/null
 ```
 
