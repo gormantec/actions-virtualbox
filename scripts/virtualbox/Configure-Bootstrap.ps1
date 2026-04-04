@@ -72,8 +72,7 @@ $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
 $guestReady = Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready after reset. Check VBox logs and guest boot logs.' -ResetOnFailure -LogGuestAdditions
 if (-not $guestReady) {
-  Write-Error 'Guest control never became ready after reset. Please check VBox logs and guest boot logs for more details.'
-  return 2
+  Stop-Action -Message 'Guest control never became ready after reset. Please check VBox logs and guest boot logs for more details.'
 }
 
 $repoApi = "https://api.github.com/repos/$ConfigRepo/contents"

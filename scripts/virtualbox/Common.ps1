@@ -116,6 +116,17 @@ function Wait-GuestControlReady {
   return $false
 }
 
+function Stop-Action {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Message,
+    [int]$ExitCode = 1
+  )
+
+  Write-Host "::error::$Message"
+  exit $ExitCode
+}
+
 function Invoke-GuestRootBash {
   param(
     [Parameter(Mandatory = $true)]

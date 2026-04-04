@@ -24,8 +24,7 @@ $vboxManage = Get-VBoxManage -Path $VBoxManagePath
 
 $guestReady = Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $GuestControlAttempts -SleepSeconds $GuestControlSleepSeconds -AttemptLabel 'Waiting for guestcontrol before user setup' -RetryLabel 'Waiting for guestcontrol after reset' -FailureMessage 'Guest control never became ready before new user setup. Check VBox logs and guest boot logs.' -ResetOnFailure
 if (-not $guestReady) {
-  Write-Error 'Guest control never became ready before new user setup. Please check VBox logs and guest boot logs for more details.'
-  return 2
+  Stop-Action -Message 'Guest control never became ready before new user setup. Please check VBox logs and guest boot logs for more details.'
 }
 
 $createUserParts = @(

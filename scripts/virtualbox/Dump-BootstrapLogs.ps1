@@ -24,8 +24,7 @@ $logsReady = $false
 
 $guestReady = Wait-GuestControlReady -VBoxManage $vboxManage -VmName $VmName -GuestUser $BaseVmUser -GuestPassword $BaseVmHostPassword -MaxAttempts $maxAttempts -SleepSeconds $sleepSeconds -AttemptLabel 'Waiting for guestcontrol after reboot' -FailureMessage 'Guest control did not become ready after reboot.'
 if (-not $guestReady) {
-  Write-Error 'Guest control did not become ready after reboot. Please check VBox logs and guest boot logs for more details.'
-  return 2
+  Stop-Action -Message 'Guest control did not become ready after reboot. Please check VBox logs and guest boot logs for more details.'
 }
 
 function Test-GuestLogsPresent {
