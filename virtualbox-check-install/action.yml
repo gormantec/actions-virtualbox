@@ -33,18 +33,15 @@ runs:
     - id: check
       name: Check or install VirtualBox
       shell: powershell
+      env:
+        PREFERRED_VBOXMANAGE_PATH: ${{ inputs.preferred_vboxmanage_path }}
+        FALLBACK_VBOXMANAGE_PATH: ${{ inputs.fallback_vboxmanage_path }}
+        CHOCO_PACKAGE_NAME: ${{ inputs.choco_package_name }}
+        INSTALL_ARGUMENTS: ${{ inputs.install_arguments }}
       run: |
         $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Check-Install.ps1'
         & $scriptPath `
-          -PreferredVBoxManagePath @'
-${{ inputs.preferred_vboxmanage_path }}
-'@ `
-          -FallbackVBoxManagePath @'
-${{ inputs.fallback_vboxmanage_path }}
-'@ `
-          -ChocoPackageName @'
-${{ inputs.choco_package_name }}
-'@ `
-          -InstallArguments @'
-${{ inputs.install_arguments }}
-'@
+          -PreferredVBoxManagePath $env:PREFERRED_VBOXMANAGE_PATH `
+          -FallbackVBoxManagePath $env:FALLBACK_VBOXMANAGE_PATH `
+          -ChocoPackageName $env:CHOCO_PACKAGE_NAME `
+          -InstallArguments $env:INSTALL_ARGUMENTS
