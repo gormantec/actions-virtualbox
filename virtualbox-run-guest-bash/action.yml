@@ -75,20 +75,20 @@ runs:
         $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Run-GuestBash.ps1'
         & $scriptPath `
           -VmName @'
-${{ inputs.vm_name }}
-'@ `
+          ${{ inputs.vm_name }}
+          '@ `
           -GuestUser @'
-${{ inputs.guest_user }}
-'@ `
+          ${{ inputs.guest_user }}
+          '@ `
           -GuestPassword @'
-${{ inputs.guest_password }}
-'@ `
+          ${{ inputs.guest_password }}
+          '@ `
           -Script @'
-${{ inputs.script }}
-'@ `
+          ${{ inputs.script }}
+          '@ `
           -EnvironmentVariables @'
-${{ inputs.environment_variables }}
-'@ `
+          ${{ inputs.environment_variables }}
+          '@ `
           -TimeoutMs ([int]'${{ inputs.timeout_ms }}') `
           -WaitForGuestControl (('${{ inputs.wait_for_guestcontrol }}').ToLowerInvariant() -eq 'true') `
           -GuestControlAttempts ([int]'${{ inputs.guestcontrol_attempts }}') `
@@ -99,5 +99,5 @@ ${{ inputs.environment_variables }}
           -WaitStdout (('${{ inputs.wait_stdout }}').ToLowerInvariant() -eq 'true') `
           -WaitStderr (('${{ inputs.wait_stderr }}').ToLowerInvariant() -eq 'true') `
           -VBoxManagePath @'
-${{ inputs.vboxmanage_path }}
-'@
+          ${{ inputs.vboxmanage_path }}
+          '@

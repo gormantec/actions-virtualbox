@@ -37,14 +37,14 @@ runs:
         $scriptPath = Join-Path '${{ github.action_path }}' '..\scripts\virtualbox\Check-Install.ps1'
         & $scriptPath `
           -PreferredVBoxManagePath @'
-${{ inputs.preferred_vboxmanage_path }}
-'@ `
+          ${{ inputs.preferred_vboxmanage_path }}
+          '@ `
           -FallbackVBoxManagePath @'
-${{ inputs.fallback_vboxmanage_path }}
-'@ `
+          ${{ inputs.fallback_vboxmanage_path }}
+          '@ `
           -ChocoPackageName @'
-${{ inputs.choco_package_name }}
-'@ `
+          ${{ inputs.choco_package_name }}
+          '@ `
           -InstallArguments @'
-${{ inputs.install_arguments }}
-'@
+          ${{ inputs.install_arguments }}
+          '@
