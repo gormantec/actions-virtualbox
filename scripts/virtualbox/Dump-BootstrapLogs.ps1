@@ -158,8 +158,6 @@ for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
     throw "Detected 'Error: Config validation failed' in /var/log/bootstrap-install.log."
   }
 
-  last exit 1
-
   $failedCommand = 'if systemctl is-failed --quiet bootstrap.service; then echo failed; fi'
   $failedResult = Invoke-GuestControlCommand -Command $failedCommand
 
