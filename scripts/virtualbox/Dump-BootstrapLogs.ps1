@@ -164,6 +164,13 @@ for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
     throw "Detected 'Error: last exit 1' in /var/log/bootstrap-install.log."
   }
 
+
+  if ($configValidationResult.Succeeded -and $configValidationResult.Output -match 'Could not get lock /var/lib/dpkg/lock-frontend') {
+    throw "Detected 'Error: Could not get lock /var/lib/dpkg/lock-frontend' in /var/log/bootstrap-install.log."
+  }
+
+  
+
   $failedCommand = 'if systemctl is-failed --quiet bootstrap.service; then echo failed; fi'
   $failedResult = Invoke-GuestControlCommand -Command $failedCommand
 
