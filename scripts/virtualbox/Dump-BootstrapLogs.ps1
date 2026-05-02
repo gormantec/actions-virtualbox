@@ -174,6 +174,12 @@ for ($attempt = 1; $attempt -le $FollowAttempts; $attempt++) {
     throw "Detected 'Error: curl: (22) The requested URL returned error: 401' in /var/log/bootstrap-install.log."
   }
 
+  if ($configValidationResult.Succeeded -and $configValidationResult.Output -match 'Error: Command failed at line') {
+    throw "Detected 'Error: Command failed at line' in /var/log/bootstrap-install.log."
+  }
+
+  
+
   
 
   $failedCommand = 'if systemctl is-failed --quiet bootstrap.service; then echo failed; fi'
